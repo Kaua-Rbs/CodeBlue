@@ -1,0 +1,21 @@
+name: codeblue
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - alembic>=1.14,<2
+  - fastapi>=0.115,<1
+  - networkx>=3.4,<4
+  - pydantic-settings>=2.8,<3
+  - pydantic>=2.11,<3
+  - psycopg>=3.2,<4
+  - sqlalchemy>=2.0,<3
+  - uvicorn>=0.34,<1
+  - pytest>=8.3,<9
+  - httpx>=0.28,<1
+  - mypy>=1.15,<2
+  - ruff>=0.11,<1
+  - pre-commit>=4.2,<5
+  - pip:
+      - -e .

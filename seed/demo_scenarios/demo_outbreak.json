@@ -1,0 +1,43 @@
+[
+  {
+    "event_type": "patient_location",
+    "occurred_at": "2026-03-30T10:00:00Z",
+    "recorded_at": "2026-03-30T10:00:00Z",
+    "source_system": "demo_emr",
+    "hospital_id": "hospital-a",
+    "payload": {
+      "event_type": "patient_location",
+      "patient_id": "patient-1",
+      "room_id": "room-101",
+      "ward_id": "ward-a"
+    }
+  },
+  {
+    "event_type": "staff_assignment",
+    "occurred_at": "2026-03-30T10:30:00Z",
+    "recorded_at": "2026-03-30T10:30:00Z",
+    "source_system": "demo_emr",
+    "hospital_id": "hospital-a",
+    "payload": {
+      "event_type": "staff_assignment",
+      "staff_id": "staff-1",
+      "ward_id": "ward-a",
+      "room_id": "room-101",
+      "role": "nurse"
+    }
+  },
+  {
+    "event_type": "lab_confirmation",
+    "occurred_at": "2026-03-30T11:00:00Z",
+    "recorded_at": "2026-03-30T11:05:00Z",
+    "source_system": "demo_lab",
+    "hospital_id": "hospital-a",
+    "payload": {
+      "event_type": "lab_confirmation",
+      "subject_type": "patient",
+      "subject_id": "patient-1",
+      "pathogen_code": "demo-flu",
+      "result": "positive"
+    }
+  }
+]
