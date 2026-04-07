@@ -7,6 +7,7 @@ dependencies:
   - alembic>=1.14,<2
   - fastapi>=0.115,<1
   - networkx>=3.4,<4
+  - openpyxl>=3.1,<4
   - pydantic-settings>=2.8,<3
   - pydantic>=2.11,<3
   - psycopg>=3.2,<4

@@ -1,5 +1,11 @@
 # Canonical Schema
 
+Status: current
+Scope: current canonical domain-model split and event-envelope invariants
+Last meaningful change: 2026-04-05
+
+Purpose: summarize the stable canonical contracts that form the shared internal language of the system.
+
 The current canonical model layer lives in `src/codeblue/domain/` and is intentionally split by concern:
 
 - `canonical_events.py`: outbreak-relevant ingest contracts

@@ -1,5 +1,11 @@
 # CodeBlue Development Plan
 
+Status: active
+Scope: implementation sequencing and current milestone plan for the first development cycle
+Last meaningful change: 2026-04-05
+
+Purpose: translate the product and architecture intent into an executable development sequence for the current repository.
+
 This document translates the project brief into a practical execution plan for the first development cycle. The immediate objective is not a polished product. It is a working backend slice that proves the platform seams are correct.
 
 ## Current Implementation Status
@@ -9,6 +15,9 @@ Completed in the current scaffold:
 - backend project bootstrap and repository structure;
 - Conda environment definition for local development;
 - typed domain contracts for canonical events, state, risk, governance, and audit;
+- typed knowledge-ingestion models plus a parser scaffold for the earlier multi-tab source format;
+- typed source-row models and a folder-based CSV package loader for the new architecture-shaped source package in `workbook/`;
+- a source compiler that turns the new CSV package into a compiled bundle plus deployment, trigger, action, and mapping runtime objects;
 - initial persistence models and Alembic migration;
 - temporal snapshot reconstruction service;
 - adapter, pathogen-pack, and policy-pack interfaces;
@@ -19,11 +28,24 @@ Completed in the current scaffold:
 Still to deepen in later iterations:
 
 - richer interval replay semantics and exposure graph logic;
+- source-knowledge persistence and stronger normalization workflows;
 - stronger repository and transaction boundaries;
 - more realistic policy constraints and review routing;
 - explainability chain linked directly to persisted provenance records;
 - seed loaders and command-line tooling; and
 - real hospital adapters.
+
+## Current Recommended Implementation Path
+
+Given the newer architecture-shaped source package in [workbook/](/home/kauar/CodeBlue/workbook), the next recommended development path is a narrow knowledge-source compiler for the hackathon rather than broader generic ingestion work.
+
+The immediate target is:
+
+- use the now-compiled influenza pack, deployment profile, policy sources, triggers, actions, and trigger-action mappings as the base for a demo runtime path;
+- keep the richer evidence sheets primarily as provenance and support material for now; and
+- use the compiled artifacts to drive reviewable actions in the demo API flow.
+
+The dedicated plan for that work lives in [knowledge-source-compiler-plan.md](/home/kauar/CodeBlue/docs/architecture/knowledge-source-compiler-plan.md).
 
 ## Target Outcome
 
@@ -186,6 +208,8 @@ The current scaffold already covers Milestones 1 and 2 plus the skeleton of Mile
 Sprint goals:
 
 - harden replay semantics and interval correctness;
+- make knowledge ingestion and curation a first-class upstream part of the knowledge layer;
+- compile the new influenza source package into a narrow executable demo path;
 - enrich the risk and governance engines while preserving the current contract boundaries;
 - improve explainability and audit linkage; and
 - verify the stack in a fully provisioned environment.
@@ -193,8 +217,8 @@ Sprint goals:
 Sprint backlog:
 
 1. Add interval-based replay tests for patient moves, staff moves, and room overlap edge cases.
-2. Expand the risk engine beyond the current demo heuristics.
-3. Persist explainability links from source events to assessments and proposed actions.
+2. Add a narrow runtime path for seasonal and inpatient influenza trigger evaluation using the compiled source package.
+3. Persist explainability links from source rows, triggers, and actions to proposed actions.
 4. Add CLI or script-based seed loading for the demo scenario.
 5. Add integration tests for ingestion, run, and review flows.
 6. Run the stack against installed dependencies and Postgres-backed containers.
@@ -235,8 +259,9 @@ Phase 0 is complete when all of the following are true:
 The next implementation step should be to harden the current scaffold:
 
 1. improve temporal interval reconstruction and overlap tests;
-2. connect audit provenance more directly to persisted risk and action records;
-3. add a seed loader and end-to-end integration test coverage; and
-4. run the stack in an installed environment to validate the runtime path.
+2. wire the compiled `workbook/` source package into a narrow trigger/action runtime path;
+3. connect audit provenance more directly to persisted risk and action records;
+4. add a seed loader and end-to-end integration test coverage; and
+5. run the stack in an installed environment to validate the runtime path.
 
 The skeleton is now stable enough that future work should refine behavior instead of changing the core layout.

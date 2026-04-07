@@ -1,0 +1,2 @@
+seasonality_profile_id,hospital_id,geography_label,profile_status,pre_alert_start_month,high_alert_start_month,high_alert_end_month,deescalation_month,year_round_background_risk,vaccination_campaign_start,vaccination_campaign_end,community_activity_input_mode,manual_override_allowed,notes,data_status
+ceara_default_v1,hospital_ce_001,"Ceará, Brazil",active,February,March,June,July,TRUE,2026-03-28,2026-05-30,manual_plus_surveillance,TRUE,Default Ceará profile based on state seasonality pattern and 2026 Nordeste vaccination strategy; editable by hospital,required

@@ -41,6 +41,9 @@ class AuditRepository:
         self.session.commit()
         return record
 
+    def get_record(self, audit_id: str) -> AuditRecordORM | None:
+        return self.session.get(AuditRecordORM, audit_id)
+
     def list_all(self) -> list[AuditRecord]:
         records = self.session.scalars(
             select(AuditRecordORM).order_by(AuditRecordORM.recorded_at)

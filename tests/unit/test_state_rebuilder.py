@@ -16,8 +16,9 @@ def test_snapshot_rebuilds_active_patient_and_staff_state() -> None:
         as_of=datetime(2026, 3, 30, 11, 0, tzinfo=UTC),
     )
 
-    assert len(snapshot.patient_states) == 1
+    assert len(snapshot.patient_states) == 2
     assert snapshot.patient_states[0].room_id == "room-101"
+    assert snapshot.patient_states[1].room_id == "room-102"
     assert len(snapshot.staff_states) == 1
     assert snapshot.staff_states[0].room_id == "room-101"
     assert snapshot.room_states[0].active_patients == ["patient-1"]

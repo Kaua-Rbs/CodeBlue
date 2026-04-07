@@ -11,5 +11,6 @@ __pycache__/
 .env
 dist/
 build/
+node_modules/
 .coverage
 htmlcov/

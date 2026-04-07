@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import StrEnum
+from typing import Any
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -56,6 +57,9 @@ class RiskAssessment(RiskModel):
     generated_by: str
     pathogen_pack_version: str
     policy_pack_version: str
+    knowledge_bundle_id: str | None = None
+    triggering_rule_ids: list[str] = Field(default_factory=list)
+    context_facts: dict[str, Any] = Field(default_factory=dict)
 
 
 class PriorityAlert(RiskModel):

@@ -1,8 +1,8 @@
 [
   {
     "event_type": "patient_location",
-    "occurred_at": "2026-03-30T10:00:00Z",
-    "recorded_at": "2026-03-30T10:00:00Z",
+    "occurred_at": "2026-03-25T10:00:00Z",
+    "recorded_at": "2026-03-25T10:00:00Z",
     "source_system": "demo_emr",
     "hospital_id": "hospital-a",
     "payload": {
@@ -10,6 +10,20 @@
       "patient_id": "patient-1",
       "room_id": "room-101",
       "ward_id": "ward-a"
+    }
+  },
+  {
+    "event_type": "room_metadata",
+    "occurred_at": "2026-03-25T10:05:00Z",
+    "recorded_at": "2026-03-25T10:05:00Z",
+    "source_system": "demo_bed_mgmt",
+    "hospital_id": "hospital-a",
+    "payload": {
+      "event_type": "room_metadata",
+      "room_id": "room-101",
+      "ward_id": "ward-a",
+      "room_type": "double_room",
+      "capacity": 2
     }
   },
   {

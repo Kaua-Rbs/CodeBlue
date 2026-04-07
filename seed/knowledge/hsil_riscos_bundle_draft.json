@@ -1,0 +1,512 @@
+{
+  "bundle_id": "kb_hsil_riscos_draft_v1",
+  "name": "HSIL RISCOS Draft Knowledge Bundle",
+  "version": "0.1.0",
+  "status": "draft",
+  "created_at": "2026-04-01T00:00:00Z",
+  "updated_at": "2026-04-01T00:00:00Z",
+  "jurisdiction": "mixed",
+  "organization": "CodeBlue",
+  "description": "Draft evidence-oriented bundle translated from the HSIL - RISCOS.csv table. It captures provenance, evidence statements, and only the candidate rules that the current Phase 0 DSL can express safely.",
+  "source_documents": [
+    {
+      "source_document_id": "src_hsil_malik_2025_001",
+      "title": "Malik S et al. (2025) PMID: 41333356",
+      "organization": "PMID",
+      "document_type": "study",
+      "version_label": "2025",
+      "jurisdiction": "IN",
+      "setting_scope": ["hospital", "icu", "oncology"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "Oncology ICU cohort. Nosocomial definition: HAP/VAP >48h post-admission/intubation. Source table: HSIL - RISCOS.csv."
+    },
+    {
+      "source_document_id": "src_hsil_jimenez_2025_001",
+      "title": "Jimenez-Juarez (2025) DOI: 10.3390/v17060771",
+      "organization": "DOI",
+      "document_type": "study",
+      "version_label": "2025",
+      "jurisdiction": "MX",
+      "setting_scope": ["hospital", "pediatrics"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "Pediatric tertiary cohort. Source table notes paradoxical breathing as a code-blue trigger and immediate MV predictor."
+    },
+    {
+      "source_document_id": "src_hsil_ha_rvi_2025_001",
+      "title": "HA-RVI Study (2025) DOI: 10.1111/tid.70135",
+      "organization": "DOI",
+      "document_type": "study",
+      "version_label": "2025",
+      "jurisdiction": "generic",
+      "setting_scope": ["hospital", "oncology", "sct"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "Hospital-acquired respiratory viral infection study with >=72h nosocomial threshold and oncology/SCT ward focus."
+    },
+    {
+      "source_document_id": "src_hsil_fan_2025_001",
+      "title": "Fan et al. (2025) PMID: 39912067",
+      "organization": "PMID",
+      "document_type": "study",
+      "version_label": "2025",
+      "jurisdiction": "CN",
+      "setting_scope": ["hospital", "adults"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "HA-DRP study. Useful mainly as evidence for risk modelling, not directly executable rules in the current DSL."
+    },
+    {
+      "source_document_id": "src_hsil_liddy_2025_001",
+      "title": "Liddy et al. (2025) DOI: 10.1097/CCE.1289",
+      "organization": "DOI",
+      "document_type": "study",
+      "version_label": "2025",
+      "jurisdiction": "IE",
+      "setting_scope": ["hospital", "sepsis"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "HA-sepsis study. Useful for evidence statements around strain and mortality; not yet cleanly executable in the current DSL."
+    },
+    {
+      "source_document_id": "src_hsil_bonin_2025_001",
+      "title": "Bonin et al. (2025) DOI: 10.57187/s.4324",
+      "organization": "DOI",
+      "document_type": "study",
+      "version_label": "2025",
+      "jurisdiction": "CH",
+      "setting_scope": ["hospital", "regional"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "Nosocomial respiratory virus cohort with >=48h threshold and quadrivalent PCR focus."
+    },
+    {
+      "source_document_id": "src_hsil_ursic_2025_001",
+      "title": "Ursic et al. (2025) DOI: 10.3390/jcm13226458",
+      "organization": "DOI",
+      "document_type": "study",
+      "version_label": "2025",
+      "jurisdiction": "SI",
+      "setting_scope": ["hospital", "icu"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "Mixed ICU cohort comparing rapid PCR to culture. Good source for diagnostic-lag evidence."
+    },
+    {
+      "source_document_id": "src_hsil_zhang_2025_001",
+      "title": "Zhang et al. (2025) DOI: 10.3389/fpubh.2025.1495794",
+      "organization": "DOI",
+      "document_type": "study",
+      "version_label": "2025",
+      "jurisdiction": "CN",
+      "setting_scope": ["hospital", "adults"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "HA-influenza risk modelling study with >=48h onset threshold and XGBoost-based screening suggestions."
+    },
+    {
+      "source_document_id": "src_hsil_costa_2025_001",
+      "title": "Costa Salachas et al. (2025) PMID: 40217353",
+      "organization": "PMID",
+      "document_type": "study",
+      "version_label": "2025",
+      "jurisdiction": "FR",
+      "setting_scope": ["hospital", "wards"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "Architectural transmission study highlighting double-occupancy rooms and hospital-acquired viral incidence."
+    },
+    {
+      "source_document_id": "src_hsil_infogripe_2024_001",
+      "title": "InfoGripe / FIOCRUZ (2024/2025)",
+      "organization": "FIOCRUZ",
+      "document_type": "surveillance_bulletin",
+      "version_label": "2024/2025",
+      "jurisdiction": "BR",
+      "setting_scope": ["surveillance", "population"],
+      "language": "pt-BR",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "Regional seasonality and resource-strain source for Brazil. Not directly executable in the current local fact model."
+    },
+    {
+      "source_document_id": "src_hsil_dabaja_2024_001",
+      "title": "Dabaja-Younis et al. (2024) DOI: 10.1186/s12879-024-09240-0",
+      "organization": "DOI",
+      "document_type": "study",
+      "version_label": "2024",
+      "jurisdiction": "IL",
+      "setting_scope": ["hospital", "all_ages"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "Behavioral compliance and protocol-automation evidence source."
+    },
+    {
+      "source_document_id": "src_hsil_grant_2025_001",
+      "title": "Grant et al. (2025) DOI: 10.1093/cid/ciae558",
+      "organization": "DOI",
+      "document_type": "study",
+      "version_label": "2025",
+      "jurisdiction": "CH",
+      "setting_scope": ["hospital", "tertiary", "regional"],
+      "language": "en",
+      "machine_readability": "semi_structured",
+      "ingestion_mode": "manual_structuring",
+      "notes": "Comparative HA-influenza vs HA-COVID study with >=3 days post-admission definition."
+    }
+  ],
+  "terminology_bindings": [],
+  "pathogen_packs": [
+    {
+      "pathogen_pack_id": "pathogen_hsil_flu_draft_v1",
+      "pathogen_code": "influenza",
+      "display_name": "Influenza HSIL Draft Pack",
+      "version": "0.1.0",
+      "status": "draft",
+      "source_document_ids": [
+        "src_hsil_malik_2025_001",
+        "src_hsil_ha_rvi_2025_001",
+        "src_hsil_zhang_2025_001",
+        "src_hsil_costa_2025_001",
+        "src_hsil_grant_2025_001"
+      ],
+      "notes": "Draft pathogen pack derived from the HSIL risk table. Only rules that map to the current DSL should be treated as executable."
+    }
+  ],
+  "policy_packs": [
+    {
+      "policy_pack_id": "policy_hsil_general_draft_v1",
+      "name": "HSIL General Draft Policy Pack",
+      "version": "0.1.0",
+      "jurisdiction": "generic",
+      "organization": "CodeBlue",
+      "source_document_ids": [
+        "src_hsil_dabaja_2024_001",
+        "src_hsil_infogripe_2024_001",
+        "src_hsil_grant_2025_001"
+      ]
+    }
+  ],
+  "review_workflow_packs": [
+    {
+      "workflow_pack_id": "workflow_hsil_general_draft_v1",
+      "name": "HSIL General Draft Workflow Pack",
+      "version": "0.1.0",
+      "source_document_ids": [
+        "src_hsil_jimenez_2025_001",
+        "src_hsil_ha_rvi_2025_001",
+        "src_hsil_costa_2025_001"
+      ]
+    }
+  ],
+  "evidence_statements": [
+    {
+      "evidence_statement_id": "evidence_hsil_001",
+      "statement": "In oncology ICU settings, nosocomial viral pneumonia and sepsis after 48 hours are associated with high ventilator demand and strong resource strain.",
+      "evidence_type": "cohort_study",
+      "source_document_ids": ["src_hsil_malik_2025_001"],
+      "confidence": "moderate",
+      "uncertainty_note": "Table combines influenza and broader viral pneumonia observations.",
+      "applies_to": ["influenza", "icu", "resource_strain", "ventilation"],
+      "used_by_rule_ids": ["rule_hsil_flu_hospital_onset_over_48h"]
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_002",
+      "statement": "Paradoxical breathing is an actionable escalation marker in pediatric viral respiratory admissions and can serve as an immediate review trigger.",
+      "evidence_type": "retrospective_study",
+      "source_document_ids": ["src_hsil_jimenez_2025_001"],
+      "confidence": "high",
+      "uncertainty_note": "Requires a clinical sign fact that does not yet exist in the current fact bridge.",
+      "applies_to": ["influenza", "pediatrics", "escalation", "mechanical_ventilation"],
+      "used_by_rule_ids": ["rule_hsil_candidate_paradoxical_breathing_blue_trigger"]
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_003",
+      "statement": "Hospital-acquired respiratory viral infection identified at or after 72 hours on oncology or SCT wards is associated with greater life-support use and should trigger ward-level vigilance.",
+      "evidence_type": "longitudinal_study",
+      "source_document_ids": ["src_hsil_ha_rvi_2025_001"],
+      "confidence": "high",
+      "uncertainty_note": "Requires ward specialty and chemotherapy recency facts for stronger implementation.",
+      "applies_to": ["influenza", "oncology", "sct", "ward_vulnerability"],
+      "used_by_rule_ids": ["rule_hsil_candidate_oncology_sct_new_onset"]
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_004",
+      "statement": "Albumin, cholinesterase, age, indwelling devices, and ventilator use are relevant risk features for hospital-acquired deterioration, but they currently fit a scoring model better than the minimal rule DSL.",
+      "evidence_type": "ml_study",
+      "source_document_ids": ["src_hsil_fan_2025_001"],
+      "confidence": "moderate",
+      "uncertainty_note": "Better suited to future feature engineering and scoring infrastructure.",
+      "applies_to": ["influenza", "risk_profile", "deterioration"],
+      "used_by_rule_ids": []
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_005",
+      "statement": "Hospital-acquired sepsis involving influenza or pneumonia imposes high critical-care and resource strain, supporting governance rules that force review rather than autonomous action.",
+      "evidence_type": "national_cohort",
+      "source_document_ids": ["src_hsil_liddy_2025_001"],
+      "confidence": "moderate",
+      "uncertainty_note": "The table does not provide a directly executable action threshold.",
+      "applies_to": ["influenza", "sepsis", "governance", "resource_strain"],
+      "used_by_rule_ids": ["rule_hsil_policy_review_only_medication"]
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_006",
+      "statement": "Nosocomial respiratory detections after 48 hours with day-4 deterioration suggest a useful surveillance trigger, but the current DSL lacks a derived day-of-stay deterioration fact.",
+      "evidence_type": "retrospective_study",
+      "source_document_ids": ["src_hsil_bonin_2025_001"],
+      "confidence": "moderate",
+      "uncertainty_note": "Requires a future deterioration timeline fact.",
+      "applies_to": ["influenza", "surveillance", "diagnostics"],
+      "used_by_rule_ids": []
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_007",
+      "statement": "Rapid multiplex PCR significantly shortens diagnostic delay in ICU viral pneumonia and supports review pathways for hidden influenza in culture-negative decline.",
+      "evidence_type": "diagnostic_study",
+      "source_document_ids": ["src_hsil_ursic_2025_001"],
+      "confidence": "moderate",
+      "uncertainty_note": "Current DSL can store this as evidence but cannot yet compare diagnostic lag times.",
+      "applies_to": ["influenza", "diagnostics", "stewardship"],
+      "used_by_rule_ids": []
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_008",
+      "statement": "Hospital-acquired influenza after 48 hours with older age, malignancy, chronic renal failure, and pneumonia supports automated high-risk screening.",
+      "evidence_type": "ml_study",
+      "source_document_ids": ["src_hsil_zhang_2025_001"],
+      "confidence": "moderate",
+      "uncertainty_note": "Most predictor features are not yet exposed in the current fact bridge.",
+      "applies_to": ["influenza", "screening", "risk_profile"],
+      "used_by_rule_ids": []
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_009",
+      "statement": "Double-occupancy rooms are associated with higher hospital-acquired viral incidence and are a strong candidate structural risk signal for ward vulnerability logic.",
+      "evidence_type": "cohort_study",
+      "source_document_ids": ["src_hsil_costa_2025_001"],
+      "confidence": "high",
+      "uncertainty_note": "This can be expressed if room-type facts are available, but the current demo fact bridge is patient-centric.",
+      "applies_to": ["influenza", "room_assignment", "ward_vulnerability"],
+      "used_by_rule_ids": ["rule_hsil_candidate_double_room_structural_risk"]
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_010",
+      "statement": "Regional seasonality and surge timing support future seasonal adaptation rules, but these require external bulletin and jurisdiction facts that are not yet in the local fact model.",
+      "evidence_type": "surveillance_bulletin",
+      "source_document_ids": ["src_hsil_infogripe_2024_001"],
+      "confidence": "moderate",
+      "uncertainty_note": "Best treated as future regional adaptation data rather than immediate executable logic.",
+      "applies_to": ["influenza", "seasonality", "regional_adaptation"],
+      "used_by_rule_ids": []
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_011",
+      "statement": "Routine viral threats may not trigger human vigilance consistently, supporting policies that force logged review workflows for influenza-related actions.",
+      "evidence_type": "retrospective_study",
+      "source_document_ids": ["src_hsil_dabaja_2024_001"],
+      "confidence": "moderate",
+      "uncertainty_note": "This is governance evidence, not a disease-definition rule.",
+      "applies_to": ["influenza", "policy", "compliance", "auditability"],
+      "used_by_rule_ids": ["rule_hsil_policy_log_all_flu_actions"]
+    },
+    {
+      "evidence_statement_id": "evidence_hsil_012",
+      "statement": "Hospital-acquired influenza can carry critical-care demand and mortality comparable to modern hospital-acquired COVID cohorts, supporting equal-severity review treatment.",
+      "evidence_type": "nationwide_cohort",
+      "source_document_ids": ["src_hsil_grant_2025_001"],
+      "confidence": "high",
+      "uncertainty_note": "Comparable severity does not itself define an executable threshold in the current DSL.",
+      "applies_to": ["influenza", "severity", "critical_care"],
+      "used_by_rule_ids": ["rule_hsil_review_flu_equal_severity"]
+    }
+  ],
+  "rule_artifacts": [
+    {
+      "rule_id": "rule_hsil_flu_hospital_onset_over_48h",
+      "rule_kind": "case_definition",
+      "owner_pack_id": "pathogen_hsil_flu_draft_v1",
+      "name": "Hospital-onset influenza over 48 hours",
+      "description": "Candidate rule derived from multiple HSIL rows using the most common nosocomial threshold in the table.",
+      "priority": 100,
+      "enabled": true,
+      "condition": {
+        "all": [
+          { "fact": "lab.confirmed_pathogen", "op": "eq", "value": "influenza" },
+          { "fact": "encounter.hours_since_admission", "op": "gt", "value": 48 }
+        ]
+      },
+      "outputs": [
+        {
+          "type": "classification",
+          "key": "case_classification",
+          "value": "hospital_onset_influenza_hsil"
+        }
+      ],
+      "source_document_ids": [
+        "src_hsil_malik_2025_001",
+        "src_hsil_bonin_2025_001",
+        "src_hsil_zhang_2025_001"
+      ],
+      "confidence": "moderate",
+      "uncertainty_note": "The table contains multiple thresholds, including 48h, 72h, 96h, and 5 days.",
+      "version": "0.1.0"
+    },
+    {
+      "rule_id": "rule_hsil_candidate_double_room_structural_risk",
+      "rule_kind": "transmission",
+      "owner_pack_id": "pathogen_hsil_flu_draft_v1",
+      "name": "Double-room structural risk signal",
+      "description": "Candidate rule expressing double-room occupancy as a structural viral risk factor.",
+      "priority": 90,
+      "enabled": true,
+      "condition": {
+        "all": [
+          { "fact": "lab.confirmed_pathogen", "op": "eq", "value": "influenza" },
+          { "fact": "room.type", "op": "eq", "value": "double_room" }
+        ]
+      },
+      "outputs": [
+        {
+          "type": "exposure_flag",
+          "key": "structural_risk",
+          "value": "double_room_influenza_risk"
+        }
+      ],
+      "source_document_ids": ["src_hsil_costa_2025_001"],
+      "confidence": "high",
+      "uncertainty_note": "Useful only when room type is reliably mapped into canonical facts.",
+      "version": "0.1.0"
+    },
+    {
+      "rule_id": "rule_hsil_review_flu_equal_severity",
+      "rule_kind": "review_rule",
+      "owner_pack_id": "workflow_hsil_general_draft_v1",
+      "name": "Review influenza with equal-severity treatment",
+      "description": "Candidate workflow rule for hospital-onset influenza classifications from the HSIL draft pack.",
+      "priority": 100,
+      "enabled": true,
+      "condition": {
+        "all": [
+          {
+            "fact": "classification.case_classification",
+            "op": "eq",
+            "value": "hospital_onset_influenza_hsil"
+          }
+        ]
+      },
+      "outputs": [
+        {
+          "type": "proposed_action",
+          "action_id": "action_hsil_review_equal_severity",
+          "review_team": "infection_prevention_control",
+          "urgency": "high"
+        }
+      ],
+      "source_document_ids": ["src_hsil_grant_2025_001"],
+      "confidence": "moderate",
+      "uncertainty_note": "This rule reflects governance response, not an automated clinical order.",
+      "version": "0.1.0"
+    },
+    {
+      "rule_id": "rule_hsil_policy_review_only_medication",
+      "rule_kind": "policy_constraint",
+      "owner_pack_id": "policy_hsil_general_draft_v1",
+      "name": "Medication-related influenza actions remain review only",
+      "description": "Candidate governance rule supported by strain and stewardship evidence in the table.",
+      "priority": 100,
+      "enabled": true,
+      "condition": {
+        "all": [
+          { "fact": "proposed_action.category", "op": "eq", "value": "medication" }
+        ]
+      },
+      "outputs": [
+        {
+          "type": "constraint",
+          "key": "execution_mode",
+          "value": "review_only"
+        }
+      ],
+      "source_document_ids": [
+        "src_hsil_liddy_2025_001",
+        "src_hsil_ursic_2025_001"
+      ],
+      "confidence": "moderate",
+      "version": "0.1.0"
+    },
+    {
+      "rule_id": "rule_hsil_policy_log_all_flu_actions",
+      "rule_kind": "policy_constraint",
+      "owner_pack_id": "policy_hsil_general_draft_v1",
+      "name": "All surfaced influenza actions must be logged",
+      "description": "Candidate governance rule derived from compliance and protocol automation findings.",
+      "priority": 95,
+      "enabled": true,
+      "condition": {
+        "all": [
+          { "fact": "classification.case_classification", "op": "exists" }
+        ]
+      },
+      "outputs": [
+        {
+          "type": "constraint",
+          "key": "audit_mode",
+          "value": "must_log"
+        }
+      ],
+      "source_document_ids": ["src_hsil_dabaja_2024_001"],
+      "confidence": "moderate",
+      "version": "0.1.0"
+    }
+  ],
+  "action_catalog": [
+    {
+      "action_id": "action_hsil_review_equal_severity",
+      "display_name": "Review equal-severity influenza response",
+      "category": "infection_control",
+      "subtype": "equal_severity_review",
+      "description": "Human review of whether hospital-acquired influenza requires the same high-severity operational response used for comparable modern respiratory viral threats.",
+      "pathogen_specificity": ["influenza"],
+      "execution_mode": "review_only",
+      "requires_reviewer_role": "infection_prevention_control",
+      "target_scope": "patient",
+      "must_be_logged": true
+    }
+  ],
+  "test_cases": [
+    {
+      "test_case_id": "tc_hsil_hospital_onset_flu_48h",
+      "name": "Influenza confirmed after 72 hours",
+      "input_facts": {
+        "lab.confirmed_pathogen": "influenza",
+        "encounter.hours_since_admission": 72,
+        "room.type": "double_room"
+      },
+      "expected_outputs": [
+        {
+          "type": "classification",
+          "key": "case_classification",
+          "value": "hospital_onset_influenza_hsil"
+        },
+        {
+          "type": "exposure_flag",
+          "key": "structural_risk",
+          "value": "double_room_influenza_risk"
+        }
+      ],
+      "unexpected_outputs": []
+    }
+  ]
+}

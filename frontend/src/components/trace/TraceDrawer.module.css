@@ -1,0 +1,96 @@
+.drawer {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  bottom: 24px;
+  width: min(420px, calc(100vw - 36px));
+  padding: 20px;
+  border-radius: 28px;
+  background: rgba(255, 253, 248, 0.95);
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 90px rgba(24, 28, 28, 0.22);
+  transform: translateX(112%);
+  transition: transform 220ms ease;
+  z-index: 20;
+  overflow: auto;
+  backdrop-filter: blur(16px);
+}
+
+.drawerOpen {
+  transform: translateX(0);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.topbar h3 {
+  margin: 0;
+}
+
+.topbar p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.closeButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  background: #ede7d9;
+  color: var(--ink);
+}
+
+.stack {
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.label {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #f0ece2;
+  color: #304541;
+  font-size: 0.78rem;
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+}
+
+.fact {
+  padding: 12px;
+  border-radius: 14px;
+  background: #fbf8f1;
+  border: 1px solid rgba(20, 48, 41, 0.08);
+}

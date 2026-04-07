@@ -1,0 +1,235 @@
+{
+  "bundle_id": "kb_codeblue_demo_v1",
+  "name": "CodeBlue Demo Knowledge Bundle",
+  "version": "1.0.0",
+  "status": "draft",
+  "created_at": "2026-03-31T00:00:00Z",
+  "updated_at": "2026-03-31T00:00:00Z",
+  "jurisdiction": "generic",
+  "organization": "CodeBlue",
+  "description": "Influenza-first demo bundle with hospital policy constraints",
+  "source_documents": [
+    {
+      "source_document_id": "src_cdc_influenza_hc_001",
+      "title": "Influenza Infection Prevention in Healthcare Settings",
+      "organization": "CDC",
+      "document_type": "guideline",
+      "publication_date": "2025-01-01",
+      "version_label": "2025.1",
+      "jurisdiction": "US",
+      "setting_scope": ["hospital", "inpatient"],
+      "url": "https://example.org/cdc/influenza-healthcare",
+      "language": "en",
+      "machine_readability": "prose",
+      "ingestion_mode": "manual_structuring",
+      "notes": "Translated into internal policy rules for the demo."
+    }
+  ],
+  "terminology_bindings": [
+    {
+      "binding_id": "binding_room_type_demo_hospital",
+      "local_system": "bed_management",
+      "local_code": "DBL",
+      "local_display": "Double Room",
+      "canonical_field": "room.type",
+      "canonical_value": "double_room"
+    }
+  ],
+  "pathogen_packs": [
+    {
+      "pathogen_pack_id": "pathogen_influenza_a_v1",
+      "pathogen_code": "influenza",
+      "display_name": "Influenza",
+      "version": "1.0.0",
+      "status": "draft",
+      "source_document_ids": ["src_cdc_influenza_hc_001"],
+      "notes": "First demo pathogen pack."
+    }
+  ],
+  "policy_packs": [
+    {
+      "policy_pack_id": "policy_general_hospital_demo_v1",
+      "name": "General Hospital Demo Policy Pack",
+      "version": "1.0.0",
+      "jurisdiction": "local_hospital",
+      "organization": "Demo Hospital",
+      "source_document_ids": ["src_cdc_influenza_hc_001"]
+    }
+  ],
+  "review_workflow_packs": [
+    {
+      "workflow_pack_id": "workflow_general_demo_v1",
+      "name": "General Review Workflow Pack",
+      "version": "1.0.0",
+      "source_document_ids": ["src_cdc_influenza_hc_001"]
+    }
+  ],
+  "evidence_statements": [
+    {
+      "evidence_statement_id": "evidence_hospital_onset_demo_001",
+      "statement": "Influenza confirmed after a hospital-onset threshold should trigger infection-control review.",
+      "evidence_type": "guideline_translation",
+      "source_document_ids": ["src_cdc_influenza_hc_001"],
+      "confidence": "high",
+      "uncertainty_note": "Local thresholds may vary by institution.",
+      "applies_to": ["influenza", "hospital_onset", "review_workflow"],
+      "used_by_rule_ids": [
+        "rule_influenza_hospital_onset_case",
+        "review_isolation_placement_for_hospital_onset_influenza"
+      ]
+    }
+  ],
+  "rule_artifacts": [
+    {
+      "rule_id": "rule_influenza_hospital_onset_case",
+      "rule_kind": "case_definition",
+      "owner_pack_id": "pathogen_influenza_a_v1",
+      "name": "Hospital-onset influenza case",
+      "description": "Confirmed influenza occurring after hospital-onset threshold.",
+      "priority": 100,
+      "enabled": true,
+      "condition": {
+        "all": [
+          { "fact": "lab.confirmed_pathogen", "op": "eq", "value": "influenza" },
+          { "fact": "encounter.hours_since_admission", "op": "gt", "value": 96 }
+        ]
+      },
+      "outputs": [
+        {
+          "type": "classification",
+          "key": "case_classification",
+          "value": "hospital_onset_influenza"
+        }
+      ],
+      "source_document_ids": ["src_cdc_influenza_hc_001"],
+      "confidence": "high",
+      "version": "1.0.0"
+    },
+    {
+      "rule_id": "review_isolation_placement_for_hospital_onset_influenza",
+      "rule_kind": "review_rule",
+      "owner_pack_id": "workflow_general_demo_v1",
+      "name": "Review isolation placement for hospital-onset influenza",
+      "description": "Route isolation review to infection prevention control.",
+      "priority": 100,
+      "enabled": true,
+      "condition": {
+        "all": [
+          {
+            "fact": "classification.case_classification",
+            "op": "eq",
+            "value": "hospital_onset_influenza"
+          }
+        ]
+      },
+      "outputs": [
+        {
+          "type": "proposed_action",
+          "action_id": "action_review_isolation_placement",
+          "review_team": "infection_prevention_control",
+          "urgency": "high"
+        }
+      ],
+      "source_document_ids": ["src_cdc_influenza_hc_001"],
+      "confidence": "high",
+      "version": "1.0.0"
+    },
+    {
+      "rule_id": "policy_no_auto_medication_orders",
+      "rule_kind": "policy_constraint",
+      "owner_pack_id": "policy_general_hospital_demo_v1",
+      "name": "No autonomous medication ordering",
+      "description": "Medication actions must remain review only.",
+      "priority": 100,
+      "enabled": true,
+      "condition": {
+        "all": [
+          { "fact": "proposed_action.category", "op": "eq", "value": "medication" }
+        ]
+      },
+      "outputs": [
+        {
+          "type": "constraint",
+          "key": "execution_mode",
+          "value": "review_only"
+        }
+      ],
+      "source_document_ids": ["src_cdc_influenza_hc_001"],
+      "confidence": "high",
+      "version": "1.0.0"
+    },
+    {
+      "rule_id": "policy_log_infection_control_actions",
+      "rule_kind": "policy_constraint",
+      "owner_pack_id": "policy_general_hospital_demo_v1",
+      "name": "All infection control actions must be logged",
+      "description": "Apply an explicit logging constraint to surfaced infection control actions.",
+      "priority": 90,
+      "enabled": true,
+      "condition": {
+        "all": [
+          { "fact": "proposed_action.category", "op": "eq", "value": "infection_control" }
+        ]
+      },
+      "outputs": [
+        {
+          "type": "constraint",
+          "key": "audit_mode",
+          "value": "must_log"
+        }
+      ],
+      "source_document_ids": ["src_cdc_influenza_hc_001"],
+      "confidence": "moderate",
+      "version": "1.0.0"
+    }
+  ],
+  "action_catalog": [
+    {
+      "action_id": "action_review_isolation_placement",
+      "display_name": "Review isolation placement",
+      "category": "infection_control",
+      "subtype": "patient_placement_review",
+      "description": "Human review of whether the patient should be placed in isolation.",
+      "pathogen_specificity": ["influenza"],
+      "execution_mode": "review_only",
+      "requires_reviewer_role": "infection_prevention_control",
+      "target_scope": "patient",
+      "must_be_logged": true
+    }
+  ],
+  "test_cases": [
+    {
+      "test_case_id": "tc_influenza_hospital_onset_001",
+      "name": "Influenza after 5 days in hospital",
+      "input_facts": {
+        "lab.confirmed_pathogen": "influenza",
+        "encounter.hours_since_admission": 120,
+        "room.type": "double_room"
+      },
+      "expected_outputs": [
+        {
+          "type": "classification",
+          "key": "case_classification",
+          "value": "hospital_onset_influenza"
+        }
+      ],
+      "unexpected_outputs": []
+    },
+    {
+      "test_case_id": "tc_policy_medication_review_only_001",
+      "name": "Medication actions remain review only",
+      "input_facts": {
+        "proposed_action.category": "medication",
+        "proposed_action.execution_mode": "autonomous"
+      },
+      "expected_outputs": [
+        {
+          "type": "constraint",
+          "key": "execution_mode",
+          "value": "review_only"
+        }
+      ],
+      "unexpected_outputs": []
+    }
+  ]
+}

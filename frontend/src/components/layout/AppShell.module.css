@@ -1,0 +1,211 @@
+.shell {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.sidebar {
+  padding: 28px 22px;
+  background: linear-gradient(180deg, #123029 0%, #173931 100%);
+  color: #f5efe6;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.brandMark {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-weight: 700;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.06)),
+    linear-gradient(145deg, #239487, #0f766e);
+}
+
+.brandTitle {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: 1.55rem;
+}
+
+.brandSubtitle {
+  margin: 4px 0 0;
+  color: rgba(245, 239, 230, 0.72);
+  font-size: 0.92rem;
+}
+
+.navGroup {
+  margin-top: 28px;
+}
+
+.navLabel {
+  margin: 0 0 12px;
+  color: rgba(245, 239, 230, 0.58);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.navLinks {
+  display: grid;
+  gap: 10px;
+}
+
+.navLink {
+  display: block;
+  padding: 14px 16px;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 16px;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.navLink:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(2px);
+}
+
+.navLinkActive {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.navLinkTitle {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.navLinkText {
+  display: block;
+  color: rgba(245, 239, 230, 0.68);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.sidebarCard {
+  margin-top: 28px;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.sidebarCard h2 {
+  margin: 0 0 10px;
+  font-size: 0.98rem;
+}
+
+.sidebarCard p {
+  margin: 0;
+  color: rgba(245, 239, 230, 0.72);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.sidebarPills {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.sidebarPill {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.8rem;
+}
+
+.content {
+  min-width: 0;
+}
+
+.contentInner {
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 18px 22px;
+  border-radius: 28px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.headerTitle {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: 1.72rem;
+}
+
+.headerText {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.headerPills {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.headerPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surfaceStrong);
+  font-size: 0.88rem;
+}
+
+.headerPill strong {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.accentPill {
+  background: var(--accentSoft);
+  color: var(--accent);
+  border-color: rgba(15, 118, 110, 0.18);
+}
+
+@media (max-width: 980px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+@media (max-width: 720px) {
+  .contentInner {
+    padding: 16px;
+  }
+
+  .header {
+    flex-direction: column;
+  }
+}

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from codeblue.persistence.db import get_session
+from codeblue.persistence.repositories.audit_repository import AuditRepository
 from codeblue.persistence.repositories.governance_repository import GovernanceRepository
 from codeblue.persistence.repositories.risk_repository import RiskRepository
 from codeblue.services.explanation import build_action_explanation
@@ -36,8 +37,13 @@ def explain_action(
         ),
         None,
     )
+    audit_record = AuditRepository(session).get_record(str(matching_action.audit_ref))
+    trace = None
+    if audit_record is not None:
+        trace = audit_record.details.get("trace")
     return {
         "action_id": action_id,
-        "explanation": build_action_explanation(matching_action, assessment),
+        "explanation": build_action_explanation(matching_action, assessment, trace),
         "assessment_id": str(assessment.assessment_id) if assessment else None,
+        "trace": trace,
     }

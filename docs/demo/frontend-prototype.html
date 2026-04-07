@@ -1,0 +1,1692 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CodeBlue Demo Prototype</title>
+    <style>
+      :root {
+        --bg: #f3efe4;
+        --bg-strong: #ece5d3;
+        --surface: rgba(255, 255, 255, 0.86);
+        --surface-strong: #fffdf8;
+        --line: rgba(20, 48, 41, 0.12);
+        --ink: #143029;
+        --muted: #5b6d69;
+        --accent: #0f766e;
+        --accent-soft: rgba(15, 118, 110, 0.1);
+        --danger: #b54630;
+        --danger-soft: rgba(181, 70, 48, 0.12);
+        --amber: #b7791f;
+        --amber-soft: rgba(183, 121, 31, 0.14);
+        --shadow: 0 24px 60px rgba(39, 47, 44, 0.12);
+        --radius-lg: 28px;
+        --radius-md: 20px;
+        --radius-sm: 14px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background:
+          radial-gradient(circle at top left, rgba(15, 118, 110, 0.08), transparent 34%),
+          radial-gradient(circle at bottom right, rgba(181, 70, 48, 0.08), transparent 30%),
+          linear-gradient(180deg, #f6f2e9 0%, #eee7d9 100%);
+        color: var(--ink);
+        font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(20, 48, 41, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(20, 48, 41, 0.025) 1px, transparent 1px);
+        background-size: 34px 34px;
+        mask-image: radial-gradient(circle at center, black 55%, transparent 100%);
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      .app-shell {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      .nav-rail {
+        position: relative;
+        padding: 28px 22px;
+        background: linear-gradient(180deg, #123029 0%, #173931 100%);
+        color: #f4efe6;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .brand-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.06)),
+          linear-gradient(145deg, #239487, #0f766e);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+        display: grid;
+        place-items: center;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+
+      .brand-copy h1 {
+        margin: 0;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+        font-size: 1.55rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .brand-copy p {
+        margin: 3px 0 0;
+        color: rgba(244, 239, 230, 0.74);
+        font-size: 0.92rem;
+      }
+
+      .nav-section {
+        margin-top: 28px;
+      }
+
+      .nav-label {
+        margin: 0 0 14px;
+        color: rgba(244, 239, 230, 0.58);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .nav-links {
+        display: grid;
+        gap: 10px;
+      }
+
+      .nav-link {
+        border: 0;
+        border-radius: 16px;
+        padding: 14px 16px;
+        text-align: left;
+        color: inherit;
+        background: transparent;
+        cursor: pointer;
+        transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+      }
+
+      .nav-link:hover,
+      .nav-link:focus-visible {
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateX(2px);
+        outline: none;
+      }
+
+      .nav-link.active {
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-link strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.98rem;
+      }
+
+      .nav-link span {
+        display: block;
+        color: rgba(244, 239, 230, 0.65);
+        font-size: 0.83rem;
+        line-height: 1.35;
+      }
+
+      .nav-card {
+        margin-top: 28px;
+        padding: 18px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-card h2,
+      .nav-card p {
+        margin: 0;
+      }
+
+      .nav-card h2 {
+        font-size: 0.96rem;
+      }
+
+      .nav-card p {
+        margin-top: 8px;
+        color: rgba(244, 239, 230, 0.72);
+        line-height: 1.45;
+        font-size: 0.88rem;
+      }
+
+      .nav-card .mini-list {
+        margin-top: 12px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .nav-card .mini-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #f4efe6;
+        font-size: 0.8rem;
+      }
+
+      .main-stage {
+        position: relative;
+        padding: 24px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 18px 22px;
+        border-radius: var(--radius-lg);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+      }
+
+      .topbar h2 {
+        margin: 0;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+        font-size: 1.7rem;
+        font-weight: 700;
+      }
+
+      .topbar p {
+        margin: 6px 0 0;
+        color: var(--muted);
+      }
+
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--surface-strong);
+        color: var(--ink);
+        font-size: 0.88rem;
+        white-space: nowrap;
+      }
+
+      .pill strong {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+
+      .pill-accent {
+        background: var(--accent-soft);
+        border-color: rgba(15, 118, 110, 0.18);
+        color: var(--accent);
+      }
+
+      .run-button,
+      .review-button {
+        border: 0;
+        cursor: pointer;
+        transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+      }
+
+      .run-button {
+        padding: 12px 18px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #b54630 0%, #d16f3f 100%);
+        color: #fff9f2;
+        box-shadow: 0 14px 28px rgba(181, 70, 48, 0.28);
+        font-weight: 700;
+      }
+
+      .run-button:hover,
+      .review-button:hover,
+      .ghost-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .screens {
+        margin-top: 24px;
+      }
+
+      .screen {
+        display: none;
+        animation: rise-in 360ms ease;
+      }
+
+      .screen.active {
+        display: block;
+      }
+
+      .summary-band {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .metric-card,
+      .panel,
+      .ward-card,
+      .timeline-card,
+      .trace-card,
+      .action-detail {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(14px);
+      }
+
+      .metric-card {
+        padding: 18px 18px 16px;
+      }
+
+      .metric-card .metric-label {
+        color: var(--muted);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .metric-card .metric-value {
+        margin-top: 12px;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .metric-card .metric-note {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .metric-card.critical .metric-value {
+        color: var(--danger);
+      }
+
+      .metric-card.watch .metric-value {
+        color: var(--amber);
+      }
+
+      .metric-card.stable .metric-value {
+        color: var(--accent);
+      }
+
+      .command-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr 0.8fr;
+        gap: 18px;
+      }
+
+      .panel {
+        padding: 18px;
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .panel-header h3,
+      .workspace-header h3,
+      .detail-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        letter-spacing: 0.01em;
+      }
+
+      .panel-header p,
+      .workspace-header p,
+      .detail-header p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .panel-link,
+      .ghost-button {
+        border: 0;
+        background: transparent;
+        color: var(--accent);
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .action-list,
+      .ward-list,
+      .trigger-list,
+      .timeline-list,
+      .field-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .action-item,
+      .ward-card,
+      .trigger-item,
+      .timeline-item {
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(20, 48, 41, 0.08);
+        background: rgba(255, 253, 248, 0.88);
+      }
+
+      .action-item {
+        cursor: pointer;
+        transition: border-color 150ms ease, transform 150ms ease, background 150ms ease;
+      }
+
+      .action-item:hover,
+      .action-item.active {
+        border-color: rgba(15, 118, 110, 0.24);
+        background: rgba(240, 248, 246, 0.96);
+        transform: translateY(-1px);
+      }
+
+      .item-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .item-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      .item-meta,
+      .item-copy,
+      .small-copy {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.45;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .badge.high {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      .badge.medium {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+
+      .badge.low,
+      .badge.stable {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+
+      .action-tags,
+      .trace-tags,
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: #f0ece2;
+        color: #314541;
+        font-size: 0.78rem;
+      }
+
+      .workspace-layout {
+        display: grid;
+        grid-template-columns: 360px minmax(0, 1fr);
+        gap: 18px;
+      }
+
+      .workspace-header,
+      .detail-header {
+        margin-bottom: 14px;
+      }
+
+      .filter-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+
+      .filter-pill {
+        border: 0;
+        background: #ebe6d9;
+        color: var(--ink);
+        padding: 8px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      .filter-pill.active {
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .action-detail {
+        padding: 20px;
+      }
+
+      .detail-section + .detail-section {
+        margin-top: 18px;
+      }
+
+      .section-label {
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .detail-card {
+        padding: 14px;
+        border-radius: 16px;
+        background: #fbf8f1;
+        border: 1px solid rgba(20, 48, 41, 0.08);
+      }
+
+      .detail-card strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.83rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+      }
+
+      .detail-card span {
+        display: block;
+        line-height: 1.45;
+      }
+
+      .review-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .review-button {
+        padding: 11px 14px;
+        border-radius: 14px;
+        color: #fffdf8;
+        font-weight: 700;
+      }
+
+      .review-button.approve {
+        background: linear-gradient(135deg, #0f766e, #1b9288);
+      }
+
+      .review-button.reject {
+        background: linear-gradient(135deg, #b54630, #d16f3f);
+      }
+
+      .review-button.defer {
+        background: linear-gradient(135deg, #b7791f, #cc9140);
+      }
+
+      .review-button.escalate {
+        background: linear-gradient(135deg, #5a4cb3, #7b6dd8);
+      }
+
+      .notes-box {
+        width: 100%;
+        min-height: 112px;
+        padding: 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(20, 48, 41, 0.12);
+        background: #fffdf8;
+        resize: vertical;
+      }
+
+      .ward-layout {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 18px;
+      }
+
+      .timeline-item strong,
+      .trigger-item strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .trace-drawer {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        bottom: 24px;
+        width: min(430px, calc(100vw - 32px));
+        padding: 20px;
+        border-radius: 28px;
+        background: rgba(255, 253, 248, 0.95);
+        border: 1px solid rgba(20, 48, 41, 0.12);
+        box-shadow: 0 30px 90px rgba(24, 28, 28, 0.22);
+        transform: translateX(112%);
+        transition: transform 220ms ease;
+        z-index: 30;
+        overflow: auto;
+        backdrop-filter: blur(18px);
+      }
+
+      .trace-drawer.open {
+        transform: translateX(0);
+      }
+
+      .trace-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .close-button {
+        border: 0;
+        background: #ede7d9;
+        color: var(--ink);
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      .trace-card {
+        padding: 16px;
+      }
+
+      .trace-stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translate(-50%, 140%);
+        padding: 14px 18px;
+        border-radius: 16px;
+        background: rgba(20, 48, 41, 0.94);
+        color: #fffdf8;
+        box-shadow: 0 20px 50px rgba(20, 48, 41, 0.22);
+        transition: transform 220ms ease;
+        z-index: 40;
+      }
+
+      .toast.show {
+        transform: translate(-50%, 0);
+      }
+
+      .stagger {
+        opacity: 0;
+        transform: translateY(10px);
+        animation: rise-in 420ms ease forwards;
+      }
+
+      .stagger:nth-child(2) {
+        animation-delay: 60ms;
+      }
+
+      .stagger:nth-child(3) {
+        animation-delay: 120ms;
+      }
+
+      .stagger:nth-child(4) {
+        animation-delay: 180ms;
+      }
+
+      .stagger:nth-child(5) {
+        animation-delay: 240ms;
+      }
+
+      @keyframes rise-in {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 1260px) {
+        .summary-band {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .command-grid,
+        .workspace-layout,
+        .ward-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .app-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-rail {
+          padding-bottom: 16px;
+        }
+
+        .nav-links {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 700px) {
+        .main-stage {
+          padding: 16px;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .summary-band {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-links {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="nav-rail">
+        <div class="brand-mark">
+          <div class="brand-icon">CB</div>
+          <div class="brand-copy">
+            <h1>CodeBlue</h1>
+            <p>Influenza response prototype</p>
+          </div>
+        </div>
+
+        <section class="nav-section">
+          <p class="nav-label">Primary surfaces</p>
+          <div class="nav-links">
+            <button class="nav-link active" data-screen-target="command-center">
+              <strong>Command Center</strong>
+              <span>Overview, priorities, and operational posture.</span>
+            </button>
+            <button class="nav-link" data-screen-target="actions">
+              <strong>Actions</strong>
+              <span>Review queue, decisions, and rationale.</span>
+            </button>
+            <button class="nav-link" data-screen-target="wards">
+              <strong>Wards</strong>
+              <span>Concentrated risk and context by unit.</span>
+            </button>
+            <button class="nav-link" data-open-trace="true">
+              <strong>Trace</strong>
+              <span>Trigger, rule, and bundle explanation.</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="nav-card">
+          <h2>Current demo package</h2>
+          <p>
+            This prototype is designed around the influenza-first demo path:
+            seasonality activation, symptomatic arrival handling, ward risk review,
+            and governed action review.
+          </p>
+          <div class="mini-list">
+            <div class="mini-pill"><span>Bundle</span><strong>kb_codeblue_demo_v1</strong></div>
+            <div class="mini-pill"><span>Policy mode</span><strong>review only</strong></div>
+            <div class="mini-pill"><span>Site</span><strong>General Hospital A</strong></div>
+          </div>
+        </section>
+      </aside>
+
+      <main class="main-stage">
+        <header class="topbar">
+          <div>
+            <h2>General Hospital A</h2>
+            <p>
+              Infection prevention command surface for respiratory-season
+              operations.
+            </p>
+          </div>
+          <div class="topbar-actions">
+            <div class="pill pill-accent">
+              <strong>Seasonality</strong>
+              High alert window active
+            </div>
+            <div class="pill">
+              <strong>Last run</strong>
+              <span id="lastRunLabel">2026-04-06 14:12</span>
+            </div>
+            <button class="run-button" id="simulateRunButton">Run Assessment</button>
+          </div>
+        </header>
+
+        <div class="screens">
+          <section class="screen active" id="screen-command-center">
+            <div class="summary-band">
+              <article class="metric-card critical stagger">
+                <div class="metric-label">High-priority pending</div>
+                <div class="metric-value" id="metricHighPriority">3</div>
+                <div class="metric-note">Awaiting clinical or IPC review</div>
+              </article>
+              <article class="metric-card watch stagger">
+                <div class="metric-label">High-risk wards</div>
+                <div class="metric-value">2</div>
+                <div class="metric-note">Ward A and Oncology Stepdown</div>
+              </article>
+              <article class="metric-card watch stagger">
+                <div class="metric-label">Isolation capacity</div>
+                <div class="metric-value">Watch</div>
+                <div class="metric-note">1 single room available</div>
+              </article>
+              <article class="metric-card critical stagger">
+                <div class="metric-label">Respiratory burden</div>
+                <div class="metric-value">Rising</div>
+                <div class="metric-note">3 influenza-compatible signals in 24h</div>
+              </article>
+              <article class="metric-card stable stagger">
+                <div class="metric-label">Open review queue</div>
+                <div class="metric-value" id="metricQueueSize">5</div>
+                <div class="metric-note">Across IPC, unit leads, and triage</div>
+              </article>
+            </div>
+
+            <div class="command-grid">
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>Prioritized Action Queue</h3>
+                    <p>What should be reviewed first right now.</p>
+                  </div>
+                  <button class="panel-link" data-screen-target="actions">Open inbox</button>
+                </div>
+                <div class="action-list" id="dashboardActionList"></div>
+              </section>
+
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>Ward Risk Board</h3>
+                    <p>Where the operational pressure is concentrating.</p>
+                  </div>
+                  <button class="panel-link" data-screen-target="wards">Open wards</button>
+                </div>
+                <div class="ward-list" id="dashboardWardList"></div>
+              </section>
+
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>Trigger and System Panel</h3>
+                    <p>Why the system is currently alert.</p>
+                  </div>
+                  <button class="panel-link" data-open-trace="true">Open trace</button>
+                </div>
+                <div class="trigger-list" id="triggerList"></div>
+              </section>
+            </div>
+          </section>
+
+          <section class="screen" id="screen-actions">
+            <div class="workspace-layout">
+              <section class="panel">
+                <div class="workspace-header">
+                  <h3>Action Review Workspace</h3>
+                  <p>Reviewable actions sorted by urgency and operational value.</p>
+                </div>
+                <div class="filter-row">
+                  <button class="filter-pill active">All</button>
+                  <button class="filter-pill">High</button>
+                  <button class="filter-pill">Pending</button>
+                  <button class="filter-pill">By ward</button>
+                </div>
+                <div class="action-list" id="workspaceActionList"></div>
+              </section>
+
+              <section class="action-detail">
+                <div class="detail-header">
+                  <h3 id="detailTitle">Review isolation placement</h3>
+                  <p id="detailSubtitle">
+                    Governed recommendation for immediate IPC review.
+                  </p>
+                </div>
+
+                <div class="detail-section">
+                  <p class="section-label">Action header</p>
+                  <div class="detail-grid">
+                    <div class="detail-card">
+                      <strong>Target</strong>
+                      <span id="detailTarget">Patient 1 · Room 101 · Ward A</span>
+                    </div>
+                    <div class="detail-card">
+                      <strong>Urgency</strong>
+                      <span id="detailUrgency">High</span>
+                    </div>
+                    <div class="detail-card">
+                      <strong>Required reviewer</strong>
+                      <span id="detailReviewer">IPC lead</span>
+                    </div>
+                    <div class="detail-card">
+                      <strong>Timing expectation</strong>
+                      <span id="detailTiming">Immediate</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="detail-section">
+                  <p class="section-label">Why this was recommended</p>
+                  <div class="detail-card">
+                    <span id="detailRationale">
+                      Hospital-onset influenza was confirmed after prolonged stay in a
+                      double room inside a vulnerable ward, so immediate isolation
+                      placement review was surfaced for IPC.
+                    </span>
+                  </div>
+                  <div class="trace-tags" id="detailRuleTags"></div>
+                </div>
+
+                <div class="detail-section">
+                  <p class="section-label">Operational context</p>
+                  <div class="detail-grid" id="detailContextGrid"></div>
+                </div>
+
+                <div class="detail-section">
+                  <p class="section-label">Review controls</p>
+                  <div class="review-controls">
+                    <button class="review-button approve" data-review="approved">Approve</button>
+                    <button class="review-button reject" data-review="rejected">Reject</button>
+                    <button class="review-button defer" data-review="deferred">Defer</button>
+                    <button class="review-button escalate" data-review="escalated">Escalate</button>
+                    <button class="ghost-button" data-open-trace="true">Open trace</button>
+                  </div>
+                  <div style="margin-top: 14px">
+                    <textarea class="notes-box" id="reviewNotes">
+Decision rationale, tradeoffs, or override reason.</textarea
+                    >
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="screen" id="screen-wards">
+            <div class="ward-layout">
+              <section class="panel">
+                <div class="detail-header">
+                  <h3 id="wardTitle">Ward A</h3>
+                  <p id="wardSubtitle">
+                    Current focus ward due to influenza confirmation, shared room
+                    exposure, and limited placement flexibility.
+                  </p>
+                </div>
+
+                <div class="detail-section">
+                  <p class="section-label">Current ward profile</p>
+                  <div class="detail-grid" id="wardProfileGrid"></div>
+                </div>
+
+                <div class="detail-section">
+                  <p class="section-label">Recent timeline</p>
+                  <div class="timeline-list" id="wardTimeline"></div>
+                </div>
+              </section>
+
+              <section class="panel">
+                <div class="detail-section">
+                  <p class="section-label">Why this ward matters</p>
+                  <div class="detail-card">
+                    <span id="wardReasoning">
+                      The ward combines shared-room structure, a confirmed influenza case,
+                      elevated vulnerability score, and one pending high-priority review.
+                    </span>
+                  </div>
+                </div>
+
+                <div class="detail-section">
+                  <p class="section-label">Actions affecting this ward</p>
+                  <div class="action-list" id="wardActionList"></div>
+                </div>
+
+                <div class="detail-section">
+                  <p class="section-label">Trace summary</p>
+                  <div class="trace-card">
+                    <div class="small-copy" id="wardTraceSummary">
+                      Trigger chain: suspected_or_confirmed_inpatient_influenza ->
+                      review_isolation_placement_for_hospital_onset_influenza ->
+                      review-only governance.
+                    </div>
+                    <div class="trace-tags" id="wardTraceTags"></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <aside class="trace-drawer" id="traceDrawer" aria-hidden="true">
+      <div class="trace-topbar">
+        <div>
+          <h3 style="margin: 0">System Context and Trace</h3>
+          <p style="margin: 6px 0 0; color: var(--muted)">
+            Why the recommendation exists and what knowledge activated it.
+          </p>
+        </div>
+        <button class="close-button" id="closeTraceButton">X</button>
+      </div>
+
+      <div class="trace-stack">
+        <section class="trace-card">
+          <p class="section-label">Decision summary</p>
+          <strong id="traceDecisionTitle">Review isolation placement</strong>
+          <p class="small-copy" id="traceDecisionCopy">
+            Proposed for Patient 1 after a hospital-onset influenza confirmation in
+            a double room on a vulnerable ward.
+          </p>
+        </section>
+
+        <section class="trace-card">
+          <p class="section-label">Trigger and rule chain</p>
+          <div class="trace-tags" id="traceRuleTags"></div>
+        </section>
+
+        <section class="trace-card">
+          <p class="section-label">Matched facts</p>
+          <div class="field-list" id="traceFactList"></div>
+        </section>
+
+        <section class="trace-card">
+          <p class="section-label">Knowledge source context</p>
+          <div class="trace-tags" id="traceSourceTags"></div>
+        </section>
+
+        <section class="trace-card">
+          <p class="section-label">Audit context</p>
+          <div class="field-list" id="traceAuditList"></div>
+        </section>
+      </div>
+    </aside>
+
+    <div class="toast" id="toast">Assessment refreshed.</div>
+
+    <script>
+      const actions = [
+        {
+          id: "action-001",
+          title: "Review isolation placement",
+          urgency: "High",
+          status: "Pending review",
+          target: "Patient 1 · Room 101 · Ward A",
+          targetWard: "Ward A",
+          reviewer: "IPC lead",
+          timing: "Immediate",
+          rationale:
+            "Hospital-onset influenza was confirmed after prolonged stay in a double room inside a vulnerable ward.",
+          category: "infection_control",
+          bundle: "kb_codeblue_demo_v1",
+          rules: [
+            "rule_influenza_hospital_onset_case",
+            "review_isolation_placement_for_hospital_onset_influenza",
+            "policy_no_auto_medication_orders"
+          ],
+          facts: [
+            "lab.confirmed_pathogen = influenza",
+            "encounter.hours_since_admission = 120",
+            "room.type = double_room",
+            "ward.vulnerability_score = 82"
+          ],
+          sources: [
+            "CDC influenza infection-control guidance",
+            "Influenza operational workflow pack"
+          ],
+          contextCards: [
+            ["Knowledge bundle", "kb_codeblue_demo_v1"],
+            ["Active constraint", "Review-only operational mode"],
+            ["Ward burden", "2 respiratory-compatible signals in 24h"],
+            ["Capacity", "1 single room available"]
+          ]
+        },
+        {
+          id: "action-002",
+          title: "Activate screening and visual alerts",
+          urgency: "Medium",
+          status: "Pending review",
+          target: "Front entry and waiting areas",
+          targetWard: "Entry points",
+          reviewer: "Unit lead or IPC",
+          timing: "Current shift",
+          rationale:
+            "The local high-alert window is active and respiratory burden is rising, so front-end screening should be visibly activated.",
+          category: "screening_and_source_control",
+          bundle: "kb_influenza_workbook_compiled_v1",
+          rules: [
+            "trigger:deployment_high_alert_window_active",
+            "map:activate_screening_triage_and_visual_alerts"
+          ],
+          facts: [
+            "seasonality.high_alert_active = true",
+            "burden.elevated_current_hospital_burden = true"
+          ],
+          sources: [
+            "Policy trigger library",
+            "Action library",
+            "Deployment seasonality profile"
+          ],
+          contextCards: [
+            ["Deployment state", "High-alert window active"],
+            ["Operational owner", "Clinical operations plus IPC"],
+            ["Capacity", "Mask supply available"],
+            ["Scope", "Entry points and waiting areas"]
+          ]
+        },
+        {
+          id: "action-003",
+          title: "Review exposed HCW assignment",
+          urgency: "High",
+          status: "Pending review",
+          target: "Staff 3 · Oncology Stepdown",
+          targetWard: "Oncology Stepdown",
+          reviewer: "IPC lead",
+          timing: "Before next shift",
+          rationale:
+            "An exposed healthcare worker is scheduled in a high-vulnerability area, so staffing review should happen before reassignment locks in.",
+          category: "staffing_and_assignment",
+          bundle: "kb_influenza_workbook_compiled_v1",
+          rules: [
+            "trigger:exposed_hcp_assigned_to_high_vulnerability_ward",
+            "map:review_hcw_assignment_before_high_vulnerability_shift"
+          ],
+          facts: [
+            "hcw.exposed_assigned_high_vulnerability_ward = true",
+            "ward.vulnerability_score = 91"
+          ],
+          sources: [
+            "Policy trigger library",
+            "Action library"
+          ],
+          contextCards: [
+            ["Vulnerability", "Protective environment adjacent"],
+            ["Shift timing", "Assignment not yet started"],
+            ["Spread state", "No confirmed staff cluster"],
+            ["Reviewer", "IPC lead"]
+          ]
+        },
+        {
+          id: "action-004",
+          title: "Review rapid influenza testing path",
+          urgency: "Medium",
+          status: "Pending review",
+          target: "Triage stream A",
+          targetWard: "Entry points",
+          reviewer: "Frontline clinician or unit lead",
+          timing: "Current shift",
+          rationale:
+            "Symptomatic arrivals are increasing and waiting-area density is rising, so rapid testing review may reduce downstream uncertainty.",
+          category: "testing_and_triage",
+          bundle: "kb_influenza_workbook_compiled_v1",
+          rules: [
+            "trigger:respiratory_symptoms_at_arrival",
+            "map:rapid_influenza_test_review"
+          ],
+          facts: [
+            "symptoms.present_at_arrival = true",
+            "ward.waiting_area_density = elevated"
+          ],
+          sources: [
+            "Policy trigger library",
+            "Action library"
+          ],
+          contextCards: [
+            ["Trigger window", "Immediate"],
+            ["Queue pressure", "Moderate rise"],
+            ["Feasibility", "Testing slots available"],
+            ["Intent", "Reduce waiting-area exposure uncertainty"]
+          ]
+        },
+        {
+          id: "action-005",
+          title: "Escalate ward cluster review",
+          urgency: "High",
+          status: "Pending review",
+          target: "Ward A",
+          targetWard: "Ward A",
+          reviewer: "IPC lead",
+          timing: "Immediate",
+          rationale:
+            "Multiple aligned respiratory signals now point to a possible ward cluster and should be escalated before more placement decisions occur.",
+          category: "escalation",
+          bundle: "kb_influenza_workbook_compiled_v1",
+          rules: [
+            "trigger:ward_cluster_signal",
+            "map:escalate_ward_cluster_review"
+          ],
+          facts: [
+            "ward.cluster_signal = true",
+            "burden.influenza_specific_hospital_burden = elevated"
+          ],
+          sources: [
+            "Policy trigger library",
+            "Action library",
+            "Ward risk evidence pack"
+          ],
+          contextCards: [
+            ["Cluster state", "Suspected"],
+            ["Ward vulnerability", "High"],
+            ["Isolation pressure", "Watch"],
+            ["Escalation route", "IPC and unit leadership"]
+          ]
+        }
+      ];
+
+      const wards = [
+        {
+          id: "ward-a",
+          name: "Ward A",
+          risk: "High",
+          vulnerability: "82 / 100",
+          summary: "Confirmed influenza plus double-room placement pressure.",
+          actionCount: 2,
+          latest: "Cluster review and isolation review pending.",
+          profile: [
+            ["Risk level", "High"],
+            ["Vulnerability score", "82 / 100"],
+            ["Room structure", "Double-room dominant"],
+            ["Current capacity", "1 single room available"]
+          ],
+          timeline: [
+            ["10:00", "Patient 1 placed in Room 101, Ward A."],
+            ["10:05", "Room 101 confirmed as double room."],
+            ["11:00", "Influenza-positive lab result recorded."],
+            ["11:08", "Isolation placement review surfaced."],
+            ["11:10", "Ward cluster review surfaced."]
+          ],
+          reasoning:
+            "Ward A combines shared-room structure, a confirmed hospital-onset influenza case, and limited placement flexibility, making it the current operational focus.",
+          traceTags: [
+            "suspected_or_confirmed_inpatient_influenza",
+            "ward_cluster_signal",
+            "review_only",
+            "kb_codeblue_demo_v1"
+          ]
+        },
+        {
+          id: "oncology-stepdown",
+          name: "Oncology Stepdown",
+          risk: "High",
+          vulnerability: "91 / 100",
+          summary: "High vulnerability amplifies any exposed staff assignment issue.",
+          actionCount: 1,
+          latest: "HCW assignment review pending.",
+          profile: [
+            ["Risk level", "High"],
+            ["Vulnerability score", "91 / 100"],
+            ["Population", "Immunocompromised"],
+            ["Current constraint", "Staffing sensitivity"]
+          ],
+          timeline: [
+            ["08:00", "Exposed HCW remains scheduled for next shift."],
+            ["08:25", "Assignment flagged for IPC review."],
+            ["08:30", "Oncology vulnerability weight elevated priority."]
+          ],
+          reasoning:
+            "This ward matters because the consequence of assignment errors is materially higher than on general wards.",
+          traceTags: [
+            "exposed_hcp_assigned_to_high_vulnerability_ward",
+            "priority_elevated",
+            "oncology_context"
+          ]
+        },
+        {
+          id: "entry-points",
+          name: "Entry Points",
+          risk: "Medium",
+          vulnerability: "Operational",
+          summary: "Seasonality and symptomatic arrivals support front-end controls.",
+          actionCount: 2,
+          latest: "Screening activation and rapid testing review pending.",
+          profile: [
+            ["Risk level", "Medium"],
+            ["Operational state", "High-alert window"],
+            ["Current issue", "Waiting-area density"],
+            ["Primary need", "Front-end source control"]
+          ],
+          timeline: [
+            ["07:40", "High-alert deployment profile activated."],
+            ["08:10", "Symptomatic arrival cluster increased."],
+            ["08:25", "Front-end screening action surfaced."]
+          ],
+          reasoning:
+            "Entry-point pressure matters because control at first contact can reduce downstream exposure burden.",
+          traceTags: [
+            "deployment_high_alert_window_active",
+            "respiratory_symptoms_at_arrival",
+            "front_end_controls"
+          ]
+        }
+      ];
+
+      const triggers = [
+        {
+          title: "Hospital-onset influenza signal",
+          urgency: "High",
+          copy: "Confirmed after prolonged stay, with room-sharing context present."
+        },
+        {
+          title: "Ward cluster signal",
+          urgency: "High",
+          copy: "Multiple aligned respiratory events in Ward A within one operational window."
+        },
+        {
+          title: "Deployment high-alert window active",
+          urgency: "Medium",
+          copy: "Seasonality profile indicates elevated front-end vigilance."
+        },
+        {
+          title: "Exposed HCW in vulnerable unit",
+          urgency: "High",
+          copy: "Assignment requires IPC review before next shift starts."
+        }
+      ];
+
+      const state = {
+        activeScreen: "command-center",
+        activeActionId: "action-001",
+        activeWardId: "ward-a"
+      };
+
+      const dashboardActionList = document.getElementById("dashboardActionList");
+      const workspaceActionList = document.getElementById("workspaceActionList");
+      const dashboardWardList = document.getElementById("dashboardWardList");
+      const triggerList = document.getElementById("triggerList");
+
+      function badgeClass(value) {
+        const normalized = value.toLowerCase();
+        if (normalized.includes("high") || normalized.includes("critical")) {
+          return "high";
+        }
+        if (normalized.includes("medium") || normalized.includes("watch")) {
+          return "medium";
+        }
+        return "stable";
+      }
+
+      function renderActions() {
+        const sorted = [...actions].sort((a, b) => {
+          const order = { High: 0, Medium: 1, Low: 2 };
+          return order[a.urgency] - order[b.urgency];
+        });
+
+        dashboardActionList.innerHTML = "";
+        workspaceActionList.innerHTML = "";
+
+        for (const action of sorted) {
+          const dashboardItem = createActionCard(action, false);
+          const workspaceItem = createActionCard(action, true);
+          dashboardActionList.appendChild(dashboardItem);
+          workspaceActionList.appendChild(workspaceItem);
+        }
+
+        document.getElementById("metricHighPriority").textContent = String(
+          actions.filter((item) => item.urgency === "High" && item.status === "Pending review").length
+        );
+        document.getElementById("metricQueueSize").textContent = String(
+          actions.filter((item) => item.status === "Pending review").length
+        );
+      }
+
+      function createActionCard(action, showMeta) {
+        const wrapper = document.createElement("article");
+        wrapper.className = "action-item" + (action.id === state.activeActionId ? " active" : "");
+        wrapper.dataset.actionId = action.id;
+        wrapper.innerHTML = `
+          <div class="item-row">
+            <div>
+              <h4 class="item-title">${action.title}</h4>
+              <p class="item-meta">${action.target}</p>
+            </div>
+            <span class="badge ${badgeClass(action.urgency)}">${action.urgency}</span>
+          </div>
+          <p class="item-copy">${action.rationale}</p>
+          <div class="action-tags">
+            <span class="chip">${action.reviewer}</span>
+            <span class="chip">${action.status}</span>
+            ${showMeta ? `<span class="chip">${action.timing}</span>` : ""}
+          </div>
+        `;
+        wrapper.addEventListener("click", () => {
+          state.activeActionId = action.id;
+          renderActions();
+          renderActionDetail();
+          openScreen("actions");
+        });
+        return wrapper;
+      }
+
+      function renderWards() {
+        dashboardWardList.innerHTML = "";
+        for (const ward of wards) {
+          const card = document.createElement("article");
+          card.className = "ward-card";
+          card.innerHTML = `
+            <div class="item-row">
+              <div>
+                <h4 class="item-title">${ward.name}</h4>
+                <p class="item-meta">${ward.summary}</p>
+              </div>
+              <span class="badge ${badgeClass(ward.risk)}">${ward.risk}</span>
+            </div>
+            <p class="item-copy">${ward.latest}</p>
+            <div class="action-tags">
+              <span class="chip">Vulnerability ${ward.vulnerability}</span>
+              <span class="chip">${ward.actionCount} linked actions</span>
+            </div>
+          `;
+          card.addEventListener("click", () => {
+            state.activeWardId = ward.id;
+            renderWardDetail();
+            openScreen("wards");
+          });
+          dashboardWardList.appendChild(card);
+        }
+      }
+
+      function renderTriggers() {
+        triggerList.innerHTML = "";
+        for (const trigger of triggers) {
+          const item = document.createElement("article");
+          item.className = "trigger-item";
+          item.innerHTML = `
+            <div class="item-row">
+              <strong>${trigger.title}</strong>
+              <span class="badge ${badgeClass(trigger.urgency)}">${trigger.urgency}</span>
+            </div>
+            <p class="item-copy">${trigger.copy}</p>
+          `;
+          item.addEventListener("click", openTrace);
+          triggerList.appendChild(item);
+        }
+      }
+
+      function renderActionDetail() {
+        const action = actions.find((item) => item.id === state.activeActionId) || actions[0];
+
+        document.getElementById("detailTitle").textContent = action.title;
+        document.getElementById("detailSubtitle").textContent =
+          "Governed recommendation surfaced for human review, not autonomous execution.";
+        document.getElementById("detailTarget").textContent = action.target;
+        document.getElementById("detailUrgency").textContent = action.urgency;
+        document.getElementById("detailReviewer").textContent = action.reviewer;
+        document.getElementById("detailTiming").textContent = action.timing;
+        document.getElementById("detailRationale").textContent = action.rationale;
+
+        const ruleTags = document.getElementById("detailRuleTags");
+        ruleTags.innerHTML = "";
+        action.rules.forEach((rule) => {
+          const chip = document.createElement("span");
+          chip.className = "chip";
+          chip.textContent = rule;
+          ruleTags.appendChild(chip);
+        });
+
+        const contextGrid = document.getElementById("detailContextGrid");
+        contextGrid.innerHTML = "";
+        action.contextCards.forEach(([label, value]) => {
+          const card = document.createElement("div");
+          card.className = "detail-card";
+          card.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+          contextGrid.appendChild(card);
+        });
+
+        renderTrace(action);
+      }
+
+      function renderWardDetail() {
+        const ward = wards.find((item) => item.id === state.activeWardId) || wards[0];
+        document.getElementById("wardTitle").textContent = ward.name;
+        document.getElementById("wardSubtitle").textContent = ward.summary;
+        document.getElementById("wardReasoning").textContent = ward.reasoning;
+
+        const profileGrid = document.getElementById("wardProfileGrid");
+        profileGrid.innerHTML = "";
+        ward.profile.forEach(([label, value]) => {
+          const card = document.createElement("div");
+          card.className = "detail-card";
+          card.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+          profileGrid.appendChild(card);
+        });
+
+        const timeline = document.getElementById("wardTimeline");
+        timeline.innerHTML = "";
+        ward.timeline.forEach(([time, copy]) => {
+          const item = document.createElement("article");
+          item.className = "timeline-item";
+          item.innerHTML = `<strong>${time}</strong><p class="item-copy">${copy}</p>`;
+          timeline.appendChild(item);
+        });
+
+        const wardActions = document.getElementById("wardActionList");
+        wardActions.innerHTML = "";
+        actions
+          .filter((item) => item.targetWard === ward.name)
+          .forEach((action) => wardActions.appendChild(createActionCard(action, false)));
+
+        const wardTraceTags = document.getElementById("wardTraceTags");
+        wardTraceTags.innerHTML = "";
+        ward.traceTags.forEach((tag) => {
+          const chip = document.createElement("span");
+          chip.className = "chip";
+          chip.textContent = tag;
+          wardTraceTags.appendChild(chip);
+        });
+      }
+
+      function renderTrace(action) {
+        document.getElementById("traceDecisionTitle").textContent = action.title;
+        document.getElementById("traceDecisionCopy").textContent =
+          `${action.rationale} Target: ${action.target}.`;
+
+        const ruleTags = document.getElementById("traceRuleTags");
+        ruleTags.innerHTML = "";
+        action.rules.forEach((rule) => {
+          const chip = document.createElement("span");
+          chip.className = "chip";
+          chip.textContent = rule;
+          ruleTags.appendChild(chip);
+        });
+
+        const factList = document.getElementById("traceFactList");
+        factList.innerHTML = "";
+        action.facts.forEach((fact) => {
+          const item = document.createElement("div");
+          item.className = "detail-card";
+          item.innerHTML = `<span>${fact}</span>`;
+          factList.appendChild(item);
+        });
+
+        const sourceTags = document.getElementById("traceSourceTags");
+        sourceTags.innerHTML = "";
+        sourceTags.appendChild(makeChip(action.bundle));
+        action.sources.forEach((source) => sourceTags.appendChild(makeChip(source)));
+
+        const auditList = document.getElementById("traceAuditList");
+        auditList.innerHTML = "";
+        [
+          `Current status: ${action.status}`,
+          `Reviewer route: ${action.reviewer}`,
+          `Execution boundary: review only`,
+          `Last run: ${document.getElementById("lastRunLabel").textContent}`
+        ].forEach((line) => {
+          const item = document.createElement("div");
+          item.className = "detail-card";
+          item.innerHTML = `<span>${line}</span>`;
+          auditList.appendChild(item);
+        });
+      }
+
+      function makeChip(text) {
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.textContent = text;
+        return chip;
+      }
+
+      function openScreen(screenId) {
+        state.activeScreen = screenId;
+        document.querySelectorAll(".screen").forEach((screen) => {
+          screen.classList.toggle("active", screen.id === `screen-${screenId}`);
+        });
+        document.querySelectorAll("[data-screen-target]").forEach((link) => {
+          link.classList.toggle("active", link.dataset.screenTarget === screenId);
+        });
+      }
+
+      function openTrace() {
+        document.getElementById("traceDrawer").classList.add("open");
+        document.getElementById("traceDrawer").setAttribute("aria-hidden", "false");
+      }
+
+      function closeTrace() {
+        document.getElementById("traceDrawer").classList.remove("open");
+        document.getElementById("traceDrawer").setAttribute("aria-hidden", "true");
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2200);
+      }
+
+      function simulateRun() {
+        const now = new Date();
+        const formatted = now.toISOString().slice(0, 16).replace("T", " ");
+        document.getElementById("lastRunLabel").textContent = formatted;
+        showToast("Assessment refreshed. Ward A remains the top priority.");
+      }
+
+      document.querySelectorAll("[data-screen-target]").forEach((link) => {
+        link.addEventListener("click", () => openScreen(link.dataset.screenTarget));
+      });
+
+      document.querySelectorAll("[data-open-trace='true']").forEach((link) => {
+        link.addEventListener("click", openTrace);
+      });
+
+      document.querySelectorAll("[data-review]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const action = actions.find((item) => item.id === state.activeActionId);
+          if (!action) {
+            return;
+          }
+          const map = {
+            approved: "Approved",
+            rejected: "Rejected",
+            deferred: "Deferred",
+            escalated: "Escalated"
+          };
+          action.status = map[button.dataset.review];
+          renderActions();
+          renderActionDetail();
+          showToast(`${action.title} marked as ${action.status.toLowerCase()}.`);
+        });
+      });
+
+      document.getElementById("closeTraceButton").addEventListener("click", closeTrace);
+      document.getElementById("simulateRunButton").addEventListener("click", simulateRun);
+
+      renderActions();
+      renderWards();
+      renderTriggers();
+      renderActionDetail();
+      renderWardDetail();
+    </script>
+  </body>
+</html>

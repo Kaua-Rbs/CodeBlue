@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from codeblue.domain.risk_models import PriorityAlert, RiskAssessment
@@ -25,6 +25,9 @@ class RiskRepository:
                     generated_by=assessment.generated_by,
                     pathogen_pack_version=assessment.pathogen_pack_version,
                     policy_pack_version=assessment.policy_pack_version,
+                    knowledge_bundle_id=assessment.knowledge_bundle_id,
+                    triggering_rule_ids=assessment.triggering_rule_ids,
+                    context_facts=assessment.context_facts,
                     signals_payload=[
                         signal.model_dump(mode="json") for signal in assessment.contributing_signals
                     ],
@@ -67,6 +70,9 @@ class RiskRepository:
                     "generated_by": record.generated_by,
                     "pathogen_pack_version": record.pathogen_pack_version,
                     "policy_pack_version": record.policy_pack_version,
+                    "knowledge_bundle_id": record.knowledge_bundle_id,
+                    "triggering_rule_ids": record.triggering_rule_ids,
+                    "context_facts": record.context_facts,
                     "contributing_signals": record.signals_payload,
                 }
             )
@@ -88,3 +94,8 @@ class RiskRepository:
             )
             for record in records
         ]
+
+    def clear_assessments_and_alerts(self) -> None:
+        self.session.execute(delete(PriorityAlertRecord))
+        self.session.execute(delete(RiskAssessmentRecord))
+        self.session.commit()

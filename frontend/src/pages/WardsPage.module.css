@@ -1,0 +1,172 @@
+.page {
+  margin-top: 24px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.panel {
+  padding: 18px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.header {
+  margin-bottom: 16px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.header p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.wardCard {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 253, 248, 0.9);
+  border: 1px solid rgba(20, 48, 41, 0.08);
+  cursor: pointer;
+}
+
+.wardCardSelected {
+  border-color: rgba(15, 118, 110, 0.26);
+  background: rgba(240, 248, 246, 0.96);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.row h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.meta {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.high {
+  background: var(--dangerSoft);
+  color: var(--danger);
+}
+
+.medium {
+  background: var(--amberSoft);
+  color: var(--amber);
+}
+
+.low {
+  background: var(--accentSoft);
+  color: var(--accent);
+}
+
+.detailSection + .detailSection {
+  margin-top: 18px;
+}
+
+.label {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.detailCard {
+  padding: 14px;
+  border-radius: 16px;
+  background: #fbf8f1;
+  border: 1px solid rgba(20, 48, 41, 0.08);
+}
+
+.detailCard strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.detailCard span {
+  display: block;
+}
+
+.actionCard {
+  padding: 14px;
+  border-radius: 16px;
+  background: #fbf8f1;
+  border: 1px solid rgba(20, 48, 41, 0.08);
+}
+
+.actionButton {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #f0ece2;
+  color: #314541;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 1120px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

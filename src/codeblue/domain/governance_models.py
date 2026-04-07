@@ -6,6 +6,8 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from codeblue.domain.risk_models import RiskPriority
+
 
 class GovernanceModel(BaseModel):
     model_config = ConfigDict(extra="forbid", use_enum_values=True)
@@ -26,6 +28,13 @@ class TargetScope(StrEnum):
     STAFF = "staff"
     PHARMACY = "pharmacy"
     IPC_TEAM = "ipc_team"
+    HOSPITAL = "hospital"
+    ENTRY_POINT = "entry_point"
+
+
+class ExecutionMode(StrEnum):
+    REVIEW_ONLY = "review_only"
+    AUTONOMOUS = "autonomous"
 
 
 class ReviewDecisionType(StrEnum):
@@ -38,13 +47,19 @@ class ReviewDecisionType(StrEnum):
 class ProposedAction(GovernanceModel):
     action_id: UUID = Field(default_factory=uuid4)
     risk_assessment_id: UUID | None = None
+    action_definition_id: str | None = None
     action_type: str
+    category: str | None = None
+    priority: RiskPriority | None = None
+    execution_mode: ExecutionMode = ExecutionMode.REVIEW_ONLY
     target_scope: TargetScope
     target_id: str
     rationale: str
     required_reviewer_role: str
     status: ActionStatus = ActionStatus.PENDING_REVIEW
     constraints_applied: list[str] = Field(default_factory=list)
+    knowledge_bundle_id: str | None = None
+    triggering_rule_ids: list[str] = Field(default_factory=list)
     audit_ref: UUID
     created_at: datetime = Field(default_factory=datetime.utcnow)
 

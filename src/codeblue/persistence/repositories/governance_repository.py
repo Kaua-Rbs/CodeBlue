@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from codeblue.domain.governance_models import ActionStatus, ProposedAction, ReviewDecision
@@ -19,13 +19,19 @@ class GovernanceRepository:
                     risk_assessment_id=(
                         str(action.risk_assessment_id) if action.risk_assessment_id else None
                     ),
+                    action_definition_id=action.action_definition_id,
                     action_type=action.action_type,
+                    category=action.category,
+                    priority=action.priority,
+                    execution_mode=action.execution_mode,
                     target_scope=action.target_scope,
                     target_id=action.target_id,
                     rationale=action.rationale,
                     required_reviewer_role=action.required_reviewer_role,
                     status=action.status,
                     constraints_applied=action.constraints_applied,
+                    knowledge_bundle_id=action.knowledge_bundle_id,
+                    triggering_rule_ids=action.triggering_rule_ids,
                     audit_ref=str(action.audit_ref),
                     created_at=action.created_at,
                 )
@@ -42,13 +48,19 @@ class GovernanceRepository:
                 {
                     "action_id": record.action_id,
                     "risk_assessment_id": record.risk_assessment_id,
+                    "action_definition_id": record.action_definition_id,
                     "action_type": record.action_type,
+                    "category": record.category,
+                    "priority": record.priority,
+                    "execution_mode": record.execution_mode,
                     "target_scope": record.target_scope,
                     "target_id": record.target_id,
                     "rationale": record.rationale,
                     "required_reviewer_role": record.required_reviewer_role,
                     "status": record.status,
                     "constraints_applied": record.constraints_applied,
+                    "knowledge_bundle_id": record.knowledge_bundle_id,
+                    "triggering_rule_ids": record.triggering_rule_ids,
                     "audit_ref": record.audit_ref,
                     "created_at": record.created_at,
                 }
@@ -58,6 +70,11 @@ class GovernanceRepository:
 
     def get_action(self, action_id: str) -> ProposedActionRecord | None:
         return self.session.get(ProposedActionRecord, action_id)
+
+    def clear_actions_and_reviews(self) -> None:
+        self.session.execute(delete(ReviewDecisionRecord))
+        self.session.execute(delete(ProposedActionRecord))
+        self.session.commit()
 
     def update_action_status(self, action_id: str, status: ActionStatus) -> ProposedActionRecord:
         record = self.session.get(ProposedActionRecord, action_id)
