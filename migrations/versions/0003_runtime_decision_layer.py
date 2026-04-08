@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision = "0003_runtime_decision_layer"
 down_revision = "0002_knowledge_layer"

@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException
 
+from codeblue.api.dependencies import SessionDependency
 from codeblue.api.schemas.reviews import ReviewActionRequest
 from codeblue.application.review_service import ReviewService
 from codeblue.domain.governance_models import ProposedAction, ReviewDecision
-from codeblue.persistence.db import get_session
 from codeblue.persistence.repositories.audit_repository import AuditRepository
 from codeblue.persistence.repositories.governance_repository import GovernanceRepository
 from codeblue.services.audit import AuditService
@@ -15,7 +14,7 @@ router = APIRouter(prefix="/actions", tags=["actions"])
 
 
 @router.get("", response_model=list[ProposedAction])
-def list_actions(session: Session = Depends(get_session)) -> list[ProposedAction]:
+def list_actions(session: SessionDependency) -> list[ProposedAction]:
     return GovernanceRepository(session).list_actions()
 
 
@@ -23,7 +22,7 @@ def list_actions(session: Session = Depends(get_session)) -> list[ProposedAction
 def review_action(
     action_id: str,
     request: ReviewActionRequest,
-    session: Session = Depends(get_session),
+    session: SessionDependency,
 ) -> ReviewDecision:
     governance_repository = GovernanceRepository(session)
     action = governance_repository.get_action(action_id)

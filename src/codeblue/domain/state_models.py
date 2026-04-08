@@ -15,7 +15,7 @@ class TimeWindow(StateModel):
     end: datetime
 
     @model_validator(mode="after")
-    def validate_bounds(self) -> "TimeWindow":
+    def validate_bounds(self) -> TimeWindow:
         if self.end < self.start:
             raise ValueError("TimeWindow.end must be greater than or equal to TimeWindow.start.")
         return self

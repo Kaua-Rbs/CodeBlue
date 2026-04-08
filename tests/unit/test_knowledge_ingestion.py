@@ -6,9 +6,6 @@ from pathlib import Path
 
 import pytest
 
-openpyxl = pytest.importorskip("openpyxl")
-Workbook = openpyxl.Workbook
-
 from codeblue.domain.knowledge_ingestion_models import (
     KnowledgeSourceRole,
     KnowledgeSourceSchemaFamily,
@@ -21,6 +18,9 @@ from codeblue.services.knowledge_ingestion import (
     normalize_knowledge_header,
     parse_knowledge_source_workbook,
 )
+
+openpyxl = pytest.importorskip("openpyxl")
+Workbook = openpyxl.Workbook
 
 
 def test_classify_source_sheet_role_uses_live_tab_names() -> None:
@@ -59,15 +59,19 @@ def test_normalize_header_handles_source_table_labels() -> None:
 
 
 def test_infer_source_schema_family_from_headers() -> None:
-    compact = ["source_id"] * 0 + [
-        "source_id",
-        "citation",
-        "pathogen_scope",
-        "canonical_feature_name",
-        "codeblue_translation",
-    ] + [f"extra_{idx}" for idx in range(28)]
-    extended = compact + ["tags", "factor_role", "data_status"]
-    legacy = extended + ["risk_factor_name"]
+    compact = (
+        ["source_id"] * 0
+        + [
+            "source_id",
+            "citation",
+            "pathogen_scope",
+            "canonical_feature_name",
+            "codeblue_translation",
+        ]
+        + [f"extra_{idx}" for idx in range(28)]
+    )
+    extended = [*compact, "tags", "factor_role", "data_status"]
+    legacy = [*extended, "risk_factor_name"]
 
     assert infer_knowledge_table_schema_family(compact) == KnowledgeSourceSchemaFamily.COMPACT_CORE
     assert infer_knowledge_table_schema_family(extended) == KnowledgeSourceSchemaFamily.EXTENDED
@@ -565,7 +569,11 @@ def test_load_knowledge_source_csv_package_parses_structured_and_supporting_tabl
     assert imported.evidence_rows[0].canonical_feature_name == "room_sharing"
     assert "HSIL - unknown_future_table.csv" in imported.unmodeled_files
 
-    trigger_summary = next(table for table in imported.tables if table.table_name == "policy_trigger_library")
-    evidence_summary = next(table for table in imported.tables if table.table_name == "ha_influenza_risk_factors")
+    trigger_summary = next(
+        table for table in imported.tables if table.table_name == "policy_trigger_library"
+    )
+    evidence_summary = next(
+        table for table in imported.tables if table.table_name == "ha_influenza_risk_factors"
+    )
     assert trigger_summary.row_count == 1
     assert evidence_summary.skipped_title_rows == 1

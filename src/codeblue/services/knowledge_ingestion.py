@@ -272,7 +272,10 @@ def parse_knowledge_source_workbook(
             imported.synthesis_rows.extend(rows)
             continue
 
-        if role == KnowledgeSourceRole.REFERENCE and normalize_sheet_name(sheet_name) == "abreviacoes":
+        if (
+            role == KnowledgeSourceRole.REFERENCE
+            and normalize_sheet_name(sheet_name) == "abreviacoes"
+        ):
             summary, entries = parse_knowledge_abbreviation_sheet(worksheet)
             imported.sheets.append(summary)
             imported.abbreviation_entries.extend(entries)
@@ -640,11 +643,15 @@ def extract_csv_row_dicts(
     duplicate_headers = 0
 
     for row in rows[header_row_index + 1 :]:
-        values = [normalize_source_cell(row[idx] if idx < len(row) else None) for idx in range(len(headers))]
+        values = [
+            normalize_source_cell(row[idx] if idx < len(row) else None)
+            for idx in range(len(headers))
+        ]
         if not any(value is not None for value in values):
             continue
         normalized_row_headers = [
-            normalize_knowledge_header(row[idx] if idx < len(row) else None) for idx in range(len(headers))
+            normalize_knowledge_header(row[idx] if idx < len(row) else None)
+            for idx in range(len(headers))
         ]
         if normalized_row_headers == headers:
             duplicate_headers += 1

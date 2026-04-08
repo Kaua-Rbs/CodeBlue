@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from tests.fixtures.demo_events import build_demo_events
+
 from codeblue.api.routes.actions import list_actions
 from codeblue.api.routes.events import ingest_events
 from codeblue.api.routes.explainability import explain_action
@@ -7,7 +9,6 @@ from codeblue.api.routes.runs import trigger_run
 from codeblue.api.schemas.events import IngestEventsRequest
 from codeblue.persistence.db import SessionLocal, engine
 from codeblue.persistence.orm_models import AuditRecordORM, Base
-from tests.fixtures.demo_events import build_demo_events
 
 
 def test_compiled_runtime_pipeline_creates_actions_and_trace() -> None:
@@ -46,10 +47,15 @@ def test_compiled_runtime_pipeline_creates_actions_and_trace() -> None:
     with SessionLocal() as session:
         explain_payload = explain_action(top_action["action_id"], session)
     assert explain_payload["trace"]["runtime_mode"] == "compiled"
-    assert "suspected_or_confirmed_inpatient_influenza" in explain_payload["trace"]["matched_trigger_ids"]
+    assert (
+        "suspected_or_confirmed_inpatient_influenza"
+        in explain_payload["trace"]["matched_trigger_ids"]
+    )
 
     with SessionLocal() as session:
-        audit_record = session.query(AuditRecordORM).filter_by(entity_id=top_action["target_id"]).first()
+        audit_record = (
+            session.query(AuditRecordORM).filter_by(entity_id=top_action["target_id"]).first()
+        )
         assert audit_record is not None
         assert audit_record.details["runtime_mode"] == "compiled"
         assert audit_record.details["trace"]["matched_mapping_ids"]

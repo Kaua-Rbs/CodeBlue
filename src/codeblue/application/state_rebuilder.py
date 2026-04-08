@@ -162,7 +162,9 @@ class TemporalStateRebuilder:
             staff_states=active_staff,
             room_states=list(room_states_map.values()),
             ward_states=list(ward_states_map.values()),
-            source_event_ids=[event.event_id for event in ordered_events if event.occurred_at <= as_of],
+            source_event_ids=[
+                event.event_id for event in ordered_events if event.occurred_at <= as_of
+            ],
         )
 
     def exposure_windows(

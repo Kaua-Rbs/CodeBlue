@@ -29,7 +29,9 @@ class DeploymentProfileService:
     ) -> DeploymentProfile | None:
         exact_matches = [profile for profile in profiles if profile.hospital_id == hospital_id]
         active_exact_matches = [
-            profile for profile in exact_matches if (profile.profile_status or "").lower() == "active"
+            profile
+            for profile in exact_matches
+            if (profile.profile_status or "").lower() == "active"
         ]
         if active_exact_matches:
             return active_exact_matches[0]

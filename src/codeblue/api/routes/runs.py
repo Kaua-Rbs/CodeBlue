@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException
 
+from codeblue.api.dependencies import SessionDependency
 from codeblue.application.orchestrator import OutbreakOrchestrator
 from codeblue.packs.pathogen.compiled_workbook_pathogen import CompiledWorkbookPathogenPack
 from codeblue.packs.pathogen.demo_influenza import DemoInfluenzaPathogenPack
 from codeblue.packs.policy.compiled_workbook_policy import CompiledWorkbookPolicyPack
 from codeblue.packs.policy.demo_hospital_policy import DemoHospitalPolicyPack
-from codeblue.persistence.db import get_session
 from codeblue.persistence.repositories.event_repository import EventRepository
 from codeblue.persistence.repositories.knowledge_repository import KnowledgeRepository
 from codeblue.services.compiled_runtime_loader import load_compiled_runtime_package_cached
@@ -19,7 +18,7 @@ router = APIRouter(prefix="/runs", tags=["runs"])
 
 
 @router.post("")
-def trigger_run(session: Session = Depends(get_session)) -> dict[str, object]:
+def trigger_run(session: SessionDependency) -> dict[str, object]:
     events = EventRepository(session).list_all()
     if not events:
         raise HTTPException(status_code=400, detail="No events are available to run.")

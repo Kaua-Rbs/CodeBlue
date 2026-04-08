@@ -60,15 +60,15 @@ class IngestionMode(StrEnum):
 
 
 class RuleCondition(KnowledgeModel):
-    all: list["RuleCondition"] | None = None
-    any: list["RuleCondition"] | None = None
-    not_: "RuleCondition | None" = Field(default=None, alias="not")
+    all: list[RuleCondition] | None = None
+    any: list[RuleCondition] | None = None
+    not_: RuleCondition | None = Field(default=None, alias="not")
     fact: str | None = None
     op: RuleOperator | None = None
     value: Any | None = None
 
     @model_validator(mode="after")
-    def validate_shape(self) -> "RuleCondition":
+    def validate_shape(self) -> RuleCondition:
         shapes = [
             self.all is not None,
             self.any is not None,

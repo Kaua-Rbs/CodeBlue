@@ -18,7 +18,9 @@ def _engine_kwargs(database_url: str, sql_echo: bool) -> dict[str, Any]:
 
 
 settings = get_settings()
-engine = create_engine(settings.database_url, **_engine_kwargs(settings.database_url, settings.sql_echo))
+engine = create_engine(
+    settings.database_url, **_engine_kwargs(settings.database_url, settings.sql_echo)
+)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, class_=Session)
 
 

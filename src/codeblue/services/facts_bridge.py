@@ -32,7 +32,10 @@ class KnowledgeFactsBridge:
             if event.event_type == EventType.LAB_CONFIRMATION:
                 payload = event.payload
                 assert isinstance(payload, LabConfirmationEvent)
-                if payload.subject_type == "patient" and payload.subject_id == patient_state.patient_id:
+                if (
+                    payload.subject_type == "patient"
+                    and payload.subject_id == patient_state.patient_id
+                ):
                     if payload.result == "positive":
                         latest_confirmed_pathogen = payload.pathogen_code
             elif event.event_type == EventType.PATIENT_LOCATION:

@@ -172,7 +172,8 @@ def test_compile_knowledge_source_package_builds_runtime_artifacts(tmp_path: Pat
             ],
             [
                 "cdc_flu_healthcare_settings_2025",
-                "Infection Prevention and Control Strategies for Seasonal Influenza in Healthcare Settings",
+                "Infection Prevention and Control Strategies for Seasonal Influenza in "
+                "Healthcare Settings",
                 "CDC",
                 "Influenza-specific healthcare infection control",
                 "influenza_specific_policy_guidance",
@@ -493,18 +494,27 @@ def test_compile_knowledge_source_package_builds_runtime_artifacts(tmp_path: Pat
     assert len(compiled.trigger_action_mappings) == 2
 
     action = next(
-        item for item in compiled.policy_action_catalog if item.action_id == "activate_screening_triage_and_visual_alerts"
+        item
+        for item in compiled.policy_action_catalog
+        if item.action_id == "activate_screening_triage_and_visual_alerts"
     )
     assert action.normalized_target_scope == "entry_point"
 
     trigger = next(
-        item for item in compiled.policy_triggers if item.trigger_id == "deployment_prealert_window_active"
+        item
+        for item in compiled.policy_triggers
+        if item.trigger_id == "deployment_prealert_window_active"
     )
     assert trigger.trigger_fact_name == "seasonality.prealert_active"
     assert trigger.source_document_ids == ["cdc_flu_healthcare_settings_2025"]
 
-    assert any(rule.rule_id == "review_map_001" for rule in compiled.knowledge_bundle.rule_artifacts)
-    assert any(rule.rule_id == "policy_audit_screen_and_mask_symptomatic_person" for rule in compiled.knowledge_bundle.rule_artifacts)
+    assert any(
+        rule.rule_id == "review_map_001" for rule in compiled.knowledge_bundle.rule_artifacts
+    )
+    assert any(
+        rule.rule_id == "policy_audit_screen_and_mask_symptomatic_person"
+        for rule in compiled.knowledge_bundle.rule_artifacts
+    )
     assert any(
         case.test_case_id == "tc_compiled_respiratory_symptoms_at_arrival"
         for case in compiled.knowledge_bundle.test_cases

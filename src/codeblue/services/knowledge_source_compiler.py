@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from datetime import UTC, date, datetime
 from pathlib import Path
-import re
 
 from codeblue.domain.governance_models import ExecutionMode, TargetScope
 from codeblue.domain.knowledge_ingestion_models import (
@@ -56,10 +56,16 @@ TRIGGER_FACTS_BY_ID = {
     "suspected_or_confirmed_inpatient_influenza": "case.suspected_or_confirmed_influenza",
     "same_room_exposure_to_confirmed_case": "exposure.same_room_to_confirmed_case",
     "same_unit_exposure_to_confirmed_case": "exposure.same_unit_to_confirmed_case",
-    "single_room_unavailable_for_influenza_case": "capacity.single_room_unavailable_for_influenza_case",
+    "single_room_unavailable_for_influenza_case": (
+        "capacity.single_room_unavailable_for_influenza_case"
+    ),
     "ill_hcp_detected": "hcw.ill_detected",
-    "hcp_returns_with_residual_respiratory_symptoms": "hcw.returned_with_residual_respiratory_symptoms",
-    "exposed_hcp_assigned_to_high_vulnerability_ward": "hcw.exposed_assigned_high_vulnerability_ward",
+    "hcp_returns_with_residual_respiratory_symptoms": (
+        "hcw.returned_with_residual_respiratory_symptoms"
+    ),
+    "exposed_hcp_assigned_to_high_vulnerability_ward": (
+        "hcw.exposed_assigned_high_vulnerability_ward"
+    ),
     "ward_cluster_signal": "ward.cluster_signal",
     "patient_transport_under_precautions": "patient.transport_under_precautions",
     "visitor_request_while_patient_infectious": "visitor.request_while_patient_infectious",
@@ -78,13 +84,19 @@ TRIGGER_FACTS_BY_ID = {
 }
 
 SOURCE_BASIS_ALIASES_BY_POLICY_SOURCE_ID = {
-    "cdc_flu_healthcare_settings_2025": {"cdc flu infection control 2025", "cdc flu infection control"},
+    "cdc_flu_healthcare_settings_2025": {
+        "cdc flu infection control 2025",
+        "cdc flu infection control",
+    },
     "cdc_flu_antivirals_2026": {"cdc flu antivirals 2026", "cdc antivirals 2026"},
     "cdc_flu_spread_2024": {"cdc flu spread 2024", "cdc flu spread"},
     "cdc_flu_highrisk_2024": {"cdc high risk 2024", "cdc flu high risk 2024"},
     "cdc_core_practices_2024": {"cdc core practices 2024"},
     "cdc_isolation_precautions_2023": {"cdc isolation precautions 2023"},
-    "br_ms_influenza_strategy_2026": {"ms influenza strategy 2026", "br ms influenza strategy 2026"},
+    "br_ms_influenza_strategy_2026": {
+        "ms influenza strategy 2026",
+        "br ms influenza strategy 2026",
+    },
     "ce_sesa_respiratory_seasonality_2026": {
         "ceara respiratory seasonality 2026",
         "ceara seasonality 2026",
@@ -172,7 +184,9 @@ def compile_knowledge_source_package(
                     set(
                         source_id
                         for row in package.influenza_pack_timing_rows
-                        for source_id in resolve_source_basis_to_ids(row.source_basis, source_basis_lookup)
+                        for source_id in resolve_source_basis_to_ids(
+                            row.source_basis, source_basis_lookup
+                        )
                     )
                 ),
                 notes="Compiled from influenza pack timing, risk-feature, and intervention tables.",
@@ -185,7 +199,11 @@ def compile_knowledge_source_package(
                 version="1.0.0",
                 jurisdiction=infer_bundle_jurisdiction(package),
                 organization="CodeBlue",
-                source_document_ids=[doc.source_document_id for doc in source_documents if doc.document_type != "study"],
+                source_document_ids=[
+                    doc.source_document_id
+                    for doc in source_documents
+                    if doc.document_type != "study"
+                ],
             )
         ],
         review_workflow_packs=[
@@ -193,7 +211,11 @@ def compile_knowledge_source_package(
                 workflow_pack_id=workflow_pack_id,
                 name="Influenza Operational Workflow Pack",
                 version="1.0.0",
-                source_document_ids=[doc.source_document_id for doc in source_documents if doc.document_type != "study"],
+                source_document_ids=[
+                    doc.source_document_id
+                    for doc in source_documents
+                    if doc.document_type != "study"
+                ],
             )
         ],
         evidence_statements=evidence_statements,
@@ -203,9 +225,11 @@ def compile_knowledge_source_package(
     )
 
     compiler_notes = [
-        "Compiled architecture-shaped influenza source tables into runtime deployment, trigger, action, and mapping objects.",
+        "Compiled architecture-shaped influenza source tables into runtime deployment, "
+        "trigger, action, and mapping objects.",
         "Generated review rules only for trigger ids that map cleanly to boolean runtime facts.",
-        "Preserved detailed policy actions separately from the generic KnowledgeBundle action catalog.",
+        "Preserved detailed policy actions separately from the generic KnowledgeBundle "
+        "action catalog.",
     ]
 
     return CompiledKnowledgePackage(
@@ -233,7 +257,10 @@ def infer_pathogen_pack_id(package: KnowledgeSourceCsvPackage) -> str:
 
 
 def infer_bundle_jurisdiction(package: KnowledgeSourceCsvPackage) -> str:
-    if any(profile.geography_label and "brazil" in profile.geography_label.lower() for profile in package.deployment_profiles):
+    if any(
+        profile.geography_label and "brazil" in profile.geography_label.lower()
+        for profile in package.deployment_profiles
+    ):
         return "Brazil"
     return "generic"
 
@@ -460,10 +487,14 @@ def compile_pack_timing_evidence(
                 evidence_statement_id=f"evidence_timing_{normalize_identifier(row.timing_parameter)}",
                 statement=row.finding_text or row.codeblue_translation or row.timing_parameter,
                 evidence_type="pathogen_timing_parameter",
-                source_document_ids=resolve_source_basis_to_ids(row.source_basis, source_basis_lookup),
+                source_document_ids=resolve_source_basis_to_ids(
+                    row.source_basis, source_basis_lookup
+                ),
                 confidence=confidence_from_note(row.confidence_note),
                 uncertainty_note=row.confidence_note,
-                applies_to=[value for value in ["influenza", row.parameter_group, row.applies_to] if value],
+                applies_to=[
+                    value for value in ["influenza", row.parameter_group, row.applies_to] if value
+                ],
                 used_by_rule_ids=[],
             )
         )
@@ -479,9 +510,13 @@ def compile_pack_risk_feature_evidence(
         statements.append(
             EvidenceStatement(
                 evidence_statement_id=f"evidence_feature_{normalize_identifier(row.canonical_feature_name)}",
-                statement=row.finding_text or row.codeblue_translation or row.canonical_feature_name,
+                statement=row.finding_text
+                or row.codeblue_translation
+                or row.canonical_feature_name,
                 evidence_type="pathogen_risk_feature",
-                source_document_ids=resolve_source_basis_to_ids(row.source_basis, source_basis_lookup),
+                source_document_ids=resolve_source_basis_to_ids(
+                    row.source_basis, source_basis_lookup
+                ),
                 confidence=confidence_from_priority(row.priority_tier),
                 uncertainty_note=row.caution_note,
                 applies_to=[
@@ -506,10 +541,14 @@ def compile_pack_intervention_evidence(
                 evidence_statement_id=f"evidence_intervention_{normalize_identifier(row.intervention_name)}",
                 statement=row.finding_text or row.codeblue_translation or row.intervention_name,
                 evidence_type="pathogen_intervention_hook",
-                source_document_ids=resolve_source_basis_to_ids(row.source_basis, source_basis_lookup),
+                source_document_ids=resolve_source_basis_to_ids(
+                    row.source_basis, source_basis_lookup
+                ),
                 confidence=ConfidenceLevel.MODERATE,
                 uncertainty_note=row.operational_constraints,
-                applies_to=[value for value in ["influenza", row.action_type, row.target_entity] if value],
+                applies_to=[
+                    value for value in ["influenza", row.action_type, row.target_entity] if value
+                ],
                 used_by_rule_ids=[],
             )
         )
@@ -522,7 +561,11 @@ def compile_literature_evidence(
 ) -> list[EvidenceStatement]:
     statements: list[EvidenceStatement] = []
     for index, row in enumerate(rows, start=1):
-        if not row.finding_text and not row.codeblue_translation and not row.study_reported_implication:
+        if (
+            not row.finding_text
+            and not row.codeblue_translation
+            and not row.study_reported_implication
+        ):
             continue
         doc_ids = [row.source_id] if row.source_id in source_document_ids else []
         statement = row.finding_text or row.codeblue_translation or row.study_reported_implication
@@ -564,14 +607,18 @@ def compile_review_rules(
         if trigger is None or action is None or not trigger.trigger_fact_name:
             continue
         urgency = normalize_urgency(mapping.base_priority or trigger.priority)
-        review_team = mapping.review_role or action.human_review_role or action.default_owner or "review_team"
+        review_team = (
+            mapping.review_role or action.human_review_role or action.default_owner or "review_team"
+        )
         rules.append(
             RuleArtifact(
                 rule_id=f"review_{mapping.map_id}",
                 rule_kind=RuleKind.REVIEW_RULE,
                 owner_pack_id=workflow_pack_id,
                 name=f"{trigger.trigger_name} -> {action.action_name}",
-                description=mapping.review_rationale or mapping.activation_logic or trigger.rationale,
+                description=mapping.review_rationale
+                or mapping.activation_logic
+                or trigger.rationale,
                 priority=priority_to_int(mapping.base_priority or trigger.priority),
                 enabled=True,
                 condition=RuleCondition(
@@ -703,7 +750,10 @@ def compile_bundle_test_cases(
 def build_source_basis_lookup(rows: list[PolicySourceRow]) -> dict[str, str]:
     lookup: dict[str, str] = {}
     for row in rows:
-        aliases = {normalize_basis_token(row.policy_source_id), normalize_basis_token(row.source_title)}
+        aliases = {
+            normalize_basis_token(row.policy_source_id),
+            normalize_basis_token(row.source_title),
+        }
         aliases.update(
             normalize_basis_token(alias)
             for alias in SOURCE_BASIS_ALIASES_BY_POLICY_SOURCE_ID.get(row.policy_source_id, set())
@@ -750,7 +800,13 @@ def normalize_action_target_scope(row: ActionLibraryRow) -> TargetScope:
         return TargetScope.HOSPITAL
     if "hcp" in entity or "staff" in entity:
         return TargetScope.STAFF
-    if scope in {"individual", "individual_or_exposure_group", "individual_or_schedule", "interdepartmental_transfer", "procedure_event"}:
+    if scope in {
+        "individual",
+        "individual_or_exposure_group",
+        "individual_or_schedule",
+        "interdepartmental_transfer",
+        "procedure_event",
+    }:
         return TargetScope.PATIENT
     return TargetScope.HOSPITAL
 

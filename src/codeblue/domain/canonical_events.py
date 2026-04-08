@@ -112,7 +112,7 @@ class EventEnvelope(CanonicalModel):
     schema_version: str = "1.0.0"
 
     @model_validator(mode="after")
-    def validate_event_type(self) -> "EventEnvelope":
+    def validate_event_type(self) -> EventEnvelope:
         if self.event_type != self.payload.event_type:
             message = (
                 f"Envelope event_type '{self.event_type}' does not match payload "

@@ -6,7 +6,6 @@ from codeblue.persistence.repositories.audit_repository import AuditRepository
 from codeblue.persistence.repositories.governance_repository import GovernanceRepository
 from codeblue.services.audit import AuditService
 
-
 STATUS_BY_DECISION: dict[ReviewDecisionType, ActionStatus] = {
     ReviewDecisionType.APPROVE: ActionStatus.APPROVED,
     ReviewDecisionType.REJECT: ActionStatus.REJECTED,

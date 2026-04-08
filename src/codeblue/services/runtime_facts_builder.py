@@ -39,9 +39,7 @@ class RuntimeFactsBuilder:
         deployment_profile: DeploymentProfile | None,
     ) -> dict[str, Any]:
         sorted_events = sorted(events, key=lambda item: item.occurred_at)
-        patient_by_id = {
-            patient.patient_id: patient for patient in snapshot.patient_states
-        }
+        patient_by_id = {patient.patient_id: patient for patient in snapshot.patient_states}
         admission_by_patient = self._earliest_admission_times(sorted_events)
         respiratory_arrival = self._symptomatic_arrival_facts(
             sorted_events,
@@ -138,7 +136,11 @@ class RuntimeFactsBuilder:
                     continue
                 patient_state = patient_by_id.get(payload.subject_id)
                 admission_at = admission_by_patient.get(payload.subject_id)
-                if patient_state is None or admission_at is None or event.occurred_at < admission_at:
+                if (
+                    patient_state is None
+                    or admission_at is None
+                    or event.occurred_at < admission_at
+                ):
                     continue
                 matches[payload.subject_id] = {
                     "matched": True,
@@ -158,7 +160,11 @@ class RuntimeFactsBuilder:
                     continue
                 patient_state = patient_by_id.get(payload.subject_id)
                 admission_at = admission_by_patient.get(payload.subject_id)
-                if patient_state is None or admission_at is None or event.occurred_at < admission_at:
+                if (
+                    patient_state is None
+                    or admission_at is None
+                    or event.occurred_at < admission_at
+                ):
                     continue
                 matches.setdefault(
                     payload.subject_id,

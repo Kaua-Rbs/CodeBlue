@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
+from tests.fixtures.demo_events import build_demo_events
+
 from codeblue.application.state_rebuilder import TemporalStateRebuilder, overlaps
 from codeblue.domain.state_models import TimeWindow
-from tests.fixtures.demo_events import build_demo_events
 
 
 def test_snapshot_rebuilds_active_patient_and_staff_state() -> None:

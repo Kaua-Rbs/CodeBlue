@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from codeblue.domain.canonical_events import EventEnvelope
-from codeblue.domain.knowledge_runtime_models import CompiledKnowledgePackage, PolicyExecutionContext
+from codeblue.domain.knowledge_runtime_models import (
+    CompiledKnowledgePackage,
+    PolicyExecutionContext,
+)
 from codeblue.domain.state_models import StateSnapshotRef
 from codeblue.services.deployment_profile_service import DeploymentProfileService
 from codeblue.services.runtime_facts_builder import RuntimeFactsBuilder

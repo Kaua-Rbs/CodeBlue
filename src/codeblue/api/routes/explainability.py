@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException
 
-from codeblue.persistence.db import get_session
+from codeblue.api.dependencies import SessionDependency
 from codeblue.persistence.repositories.audit_repository import AuditRepository
 from codeblue.persistence.repositories.governance_repository import GovernanceRepository
 from codeblue.persistence.repositories.risk_repository import RiskRepository
@@ -15,7 +14,7 @@ router = APIRouter(prefix="/explainability", tags=["explainability"])
 @router.get("/actions/{action_id}")
 def explain_action(
     action_id: str,
-    session: Session = Depends(get_session),
+    session: SessionDependency,
 ) -> dict[str, object]:
     governance_repository = GovernanceRepository(session)
     action_record = governance_repository.get_action(action_id)

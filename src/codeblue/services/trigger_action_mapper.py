@@ -138,19 +138,21 @@ class TriggerActionMapper:
         match: TriggerMatch,
         context: PolicyExecutionContext,
     ) -> str | None:
-        patient_index = {
-            patient.patient_id: patient for patient in context.snapshot.patient_states
-        }
+        patient_index = {patient.patient_id: patient for patient in context.snapshot.patient_states}
         if target_scope == TargetScope.PATIENT:
             return match.target_id if match.target_scope == "patient" else None
         if target_scope == TargetScope.ROOM:
             patient_state = patient_index.get(match.target_id)
-            return patient_state.room_id if patient_state and match.target_scope == "patient" else None
+            return (
+                patient_state.room_id if patient_state and match.target_scope == "patient" else None
+            )
         if target_scope == TargetScope.WARD:
             if match.target_scope == "ward":
                 return match.target_id
             patient_state = patient_index.get(match.target_id)
-            return patient_state.ward_id if patient_state and match.target_scope == "patient" else None
+            return (
+                patient_state.ward_id if patient_state and match.target_scope == "patient" else None
+            )
         if target_scope == TargetScope.HOSPITAL:
             return context.snapshot.hospital_id
         if target_scope == TargetScope.ENTRY_POINT:

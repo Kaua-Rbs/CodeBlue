@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from codeblue.domain.knowledge_runtime_models import PolicyExecutionContext, PolicyTriggerDefinition, TriggerMatch
+from codeblue.domain.knowledge_runtime_models import (
+    PolicyExecutionContext,
+    PolicyTriggerDefinition,
+    TriggerMatch,
+)
 
 SUPPORTED_TRIGGER_IDS = {
     "deployment_prealert_window_active",

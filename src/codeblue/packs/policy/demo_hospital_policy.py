@@ -8,8 +8,8 @@ from codeblue.domain.knowledge_models import (
     ConstraintOutput,
     KnowledgeBundle,
     ProposedActionOutput,
-    RuleKind,
     RuleArtifact,
+    RuleKind,
 )
 from codeblue.domain.knowledge_runtime_models import PolicyExecutionContext
 from codeblue.domain.risk_models import RiskAssessment

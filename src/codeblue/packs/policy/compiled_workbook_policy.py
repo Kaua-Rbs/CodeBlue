@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from codeblue.domain.governance_models import ExecutionMode, ProposedAction
 from codeblue.domain.knowledge_models import ConstraintOutput, RuleArtifact, RuleKind
-from codeblue.domain.knowledge_runtime_models import CompiledKnowledgePackage, PolicyExecutionContext
+from codeblue.domain.knowledge_runtime_models import (
+    CompiledKnowledgePackage,
+    PolicyExecutionContext,
+)
 from codeblue.domain.risk_models import RiskAssessment
 from codeblue.packs.policy.base import PolicyPack
 from codeblue.services.facts_bridge import KnowledgeFactsBridge

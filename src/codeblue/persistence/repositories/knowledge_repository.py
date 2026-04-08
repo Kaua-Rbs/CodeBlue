@@ -40,26 +40,36 @@ class KnowledgeRepository:
         self.session.execute(
             delete(PathogenPackRecord).where(PathogenPackRecord.bundle_id == bundle.bundle_id)
         )
-        self.session.execute(delete(PolicyPackRecord).where(PolicyPackRecord.bundle_id == bundle.bundle_id))
+        self.session.execute(
+            delete(PolicyPackRecord).where(PolicyPackRecord.bundle_id == bundle.bundle_id)
+        )
         self.session.execute(
             delete(ReviewWorkflowPackRecord).where(
                 ReviewWorkflowPackRecord.bundle_id == bundle.bundle_id
             )
         )
         self.session.execute(
-            delete(ActionDefinitionRecord).where(ActionDefinitionRecord.bundle_id == bundle.bundle_id)
+            delete(ActionDefinitionRecord).where(
+                ActionDefinitionRecord.bundle_id == bundle.bundle_id
+            )
         )
         self.session.execute(
-            delete(EvidenceStatementRecord).where(EvidenceStatementRecord.bundle_id == bundle.bundle_id)
+            delete(EvidenceStatementRecord).where(
+                EvidenceStatementRecord.bundle_id == bundle.bundle_id
+            )
         )
         self.session.execute(
-            delete(TerminologyBindingRecord).where(TerminologyBindingRecord.bundle_id == bundle.bundle_id)
+            delete(TerminologyBindingRecord).where(
+                TerminologyBindingRecord.bundle_id == bundle.bundle_id
+            )
         )
         self.session.execute(
             delete(RuleArtifactRecord).where(RuleArtifactRecord.bundle_id == bundle.bundle_id)
         )
         self.session.execute(
-            delete(KnowledgeTestCaseRecord).where(KnowledgeTestCaseRecord.bundle_id == bundle.bundle_id)
+            delete(KnowledgeTestCaseRecord).where(
+                KnowledgeTestCaseRecord.bundle_id == bundle.bundle_id
+            )
         )
         self.session.execute(
             delete(KnowledgeBundleRecord).where(KnowledgeBundleRecord.bundle_id == bundle.bundle_id)

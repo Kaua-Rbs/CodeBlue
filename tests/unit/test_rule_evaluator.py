@@ -8,7 +8,9 @@ def test_rule_evaluator_handles_nested_logic() -> None:
     evaluator = RuleEvaluator()
     bundle = load_knowledge_bundle()
     rule = next(
-        rule for rule in bundle.rule_artifacts if rule.rule_id == "rule_influenza_hospital_onset_case"
+        rule
+        for rule in bundle.rule_artifacts
+        if rule.rule_id == "rule_influenza_hospital_onset_case"
     )
 
     result = evaluator.evaluate_rules(
@@ -46,9 +48,7 @@ def test_review_rule_emits_proposed_action_output() -> None:
         {"classification.case_classification": "hospital_onset_influenza"},
     )
 
-    assert result.triggering_rule_ids == [
-        "review_isolation_placement_for_hospital_onset_influenza"
-    ]
+    assert result.triggering_rule_ids == ["review_isolation_placement_for_hospital_onset_influenza"]
     assert result.matched_outputs[0].type == "proposed_action"
 
 

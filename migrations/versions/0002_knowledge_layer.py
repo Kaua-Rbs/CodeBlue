@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision = "0002_knowledge_layer"
 down_revision = "0001_initial_schema"
@@ -37,7 +37,9 @@ def upgrade() -> None:
     op.add_column("proposed_actions", sa.Column("category", sa.String(length=64), nullable=True))
     op.add_column(
         "proposed_actions",
-        sa.Column("execution_mode", sa.String(length=32), nullable=False, server_default="review_only"),
+        sa.Column(
+            "execution_mode", sa.String(length=32), nullable=False, server_default="review_only"
+        ),
     )
     op.add_column(
         "proposed_actions",
