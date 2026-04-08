@@ -34,6 +34,7 @@ from codeblue.domain.knowledge_models import (
     RuleArtifact,
     RuleCondition,
     RuleKind,
+    RuleOperator,
     SourceDocument,
     TerminologyBinding,
 )
@@ -268,41 +269,43 @@ def infer_bundle_jurisdiction(package: KnowledgeSourceCsvPackage) -> str:
 def compile_source_documents(package: KnowledgeSourceCsvPackage) -> list[SourceDocument]:
     documents: dict[str, SourceDocument] = {}
 
-    for row in package.policy_sources:
-        publication_date = parse_full_date(row.last_update_or_publication)
-        documents[row.policy_source_id] = SourceDocument(
-            source_document_id=row.policy_source_id,
-            title=row.source_title,
-            organization=row.issuing_body,
-            document_type=normalize_document_type(row.source_type),
+    for policy_source in package.policy_sources:
+        publication_date = parse_full_date(policy_source.last_update_or_publication)
+        documents[policy_source.policy_source_id] = SourceDocument(
+            source_document_id=policy_source.policy_source_id,
+            title=policy_source.source_title,
+            organization=policy_source.issuing_body,
+            document_type=normalize_document_type(policy_source.source_type),
             publication_date=publication_date,
-            version_label=row.last_update_or_publication,
-            jurisdiction=infer_source_jurisdiction(row),
-            setting_scope=["hospital"] if "healthcare" in (row.source_scope or "").lower() else [],
+            version_label=policy_source.last_update_or_publication,
+            jurisdiction=infer_source_jurisdiction(policy_source),
+            setting_scope=(
+                ["hospital"] if "healthcare" in (policy_source.source_scope or "").lower() else []
+            ),
             url=None,
             language="en",
             machine_readability=MachineReadability.PROSE,
             ingestion_mode=IngestionMode.TEMPLATE_IMPORT,
-            notes=row.primary_use_in_codeblue or row.authority_notes,
+            notes=policy_source.primary_use_in_codeblue or policy_source.authority_notes,
         )
 
-    for row in package.evidence_rows:
-        if not row.source_id or row.source_id in documents:
+    for evidence_row in package.evidence_rows:
+        if not evidence_row.source_id or evidence_row.source_id in documents:
             continue
-        documents[row.source_id] = SourceDocument(
-            source_document_id=row.source_id,
-            title=row.citation or row.source_id,
-            organization=row.country or "literature_source",
+        documents[evidence_row.source_id] = SourceDocument(
+            source_document_id=evidence_row.source_id,
+            title=evidence_row.citation or evidence_row.source_id,
+            organization=evidence_row.country or "literature_source",
             document_type="study",
             publication_date=None,
-            version_label=row.study_design,
-            jurisdiction=row.country or "generic",
-            setting_scope=[row.setting] if row.setting else [],
-            url=build_doi_url(row.doi),
+            version_label=evidence_row.study_design,
+            jurisdiction=evidence_row.country or "generic",
+            setting_scope=[evidence_row.setting] if evidence_row.setting else [],
+            url=build_doi_url(evidence_row.doi),
             language="en",
             machine_readability=MachineReadability.SEMI_STRUCTURED,
             ingestion_mode=IngestionMode.TEMPLATE_IMPORT,
-            notes=row.key_limitations or row.study_reported_implication,
+            notes=evidence_row.key_limitations or evidence_row.study_reported_implication,
         )
 
     return sorted(documents.values(), key=lambda document: document.source_document_id)
@@ -623,7 +626,7 @@ def compile_review_rules(
                 enabled=True,
                 condition=RuleCondition(
                     fact=trigger.trigger_fact_name,
-                    op="eq",
+                    op=RuleOperator.EQ,
                     value=True,
                 ),
                 outputs=[
@@ -661,7 +664,7 @@ def compile_policy_constraint_rules(
                 enabled=True,
                 condition=RuleCondition(
                     fact="proposed_action.action_definition_id",
-                    op="eq",
+                    op=RuleOperator.EQ,
                     value=action.action_id,
                 ),
                 outputs=[
@@ -688,7 +691,7 @@ def compile_policy_constraint_rules(
                     enabled=True,
                     condition=RuleCondition(
                         fact="proposed_action.action_definition_id",
-                        op="eq",
+                        op=RuleOperator.EQ,
                         value=action.action_id,
                     ),
                     outputs=[

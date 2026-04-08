@@ -3,12 +3,9 @@ from __future__ import annotations
 import csv
 import re
 import unicodedata
+from collections.abc import Iterable
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
-
-if TYPE_CHECKING:
-    from openpyxl.workbook.workbook import Workbook
-    from openpyxl.worksheet.worksheet import Worksheet
+from typing import Any, Protocol
 
 from codeblue.domain.knowledge_ingestion_models import (
     ActionLibraryRow,
@@ -198,8 +195,24 @@ CSV_STRUCTURED_TABLE_SPECS: dict[
 }
 
 
+class Worksheet(Protocol):
+    title: str
+
+    def iter_rows(
+        self,
+        min_row: int = 1,
+        values_only: bool = False,
+    ) -> Iterable[tuple[Any, ...]]: ...
+
+
+class Workbook(Protocol):
+    sheetnames: list[str]
+
+    def __getitem__(self, key: str) -> Worksheet: ...
+
+
 def load_knowledge_source_workbook(path: Path) -> KnowledgeSourceImport:
-    from openpyxl import load_workbook
+    from openpyxl import load_workbook  # type: ignore[import-untyped]
 
     workbook = load_workbook(filename=path, data_only=True)
     return parse_knowledge_source_workbook(workbook, source_name=path.name)
@@ -217,31 +230,33 @@ def load_knowledge_source_csv_package(path: Path) -> KnowledgeSourceCsvPackage:
         table_name = normalize_source_package_table_name(csv_path.stem)
 
         if table_name in CSV_STRUCTURED_TABLE_SPECS:
-            summary, rows, target_attr = parse_structured_source_csv(csv_path, table_name)
+            summary, structured_rows, target_attr = parse_structured_source_csv(
+                csv_path, table_name
+            )
             imported.tables.append(summary)
-            getattr(imported, target_attr).extend(rows)
+            getattr(imported, target_attr).extend(structured_rows)
             continue
 
         if table_name == "library":
-            summary, entries = parse_knowledge_library_csv(csv_path)
+            summary, library_entries = parse_knowledge_library_csv(csv_path)
             imported.tables.append(summary)
-            imported.library_entries.extend(entries)
+            imported.library_entries.extend(library_entries)
             continue
 
         if table_name == "abreviacoes":
-            summary, entries = parse_knowledge_abbreviation_csv(csv_path)
+            summary, abbreviation_entries = parse_knowledge_abbreviation_csv(csv_path)
             imported.tables.append(summary)
-            imported.abbreviation_entries.extend(entries)
+            imported.abbreviation_entries.extend(abbreviation_entries)
             continue
 
         try:
-            summary, rows = parse_knowledge_source_evidence_csv(csv_path)
+            summary, evidence_rows = parse_knowledge_source_evidence_csv(csv_path)
         except ValueError:
             imported.unmodeled_files.append(csv_path.name)
             continue
 
         imported.tables.append(summary)
-        imported.evidence_rows.extend(rows)
+        imported.evidence_rows.extend(evidence_rows)
 
     return imported
 
@@ -267,35 +282,35 @@ def parse_knowledge_source_workbook(
             continue
 
         if role == KnowledgeSourceRole.OVERVIEW_SYNTHESIS:
-            summary, rows = parse_knowledge_source_synthesis_sheet(worksheet)
+            summary, synthesis_rows = parse_knowledge_source_synthesis_sheet(worksheet)
             imported.sheets.append(summary)
-            imported.synthesis_rows.extend(rows)
+            imported.synthesis_rows.extend(synthesis_rows)
             continue
 
         if (
             role == KnowledgeSourceRole.REFERENCE
             and normalize_sheet_name(sheet_name) == "abreviacoes"
         ):
-            summary, entries = parse_knowledge_abbreviation_sheet(worksheet)
+            summary, abbreviation_entries = parse_knowledge_abbreviation_sheet(worksheet)
             imported.sheets.append(summary)
-            imported.abbreviation_entries.extend(entries)
+            imported.abbreviation_entries.extend(abbreviation_entries)
             continue
 
         if role == KnowledgeSourceRole.REFERENCE and normalize_sheet_name(sheet_name) == "library":
-            summary, entries = parse_knowledge_library_sheet(worksheet)
+            summary, library_entries = parse_knowledge_library_sheet(worksheet)
             imported.sheets.append(summary)
-            imported.library_entries.extend(entries)
+            imported.library_entries.extend(library_entries)
             continue
 
         if role == KnowledgeSourceRole.REFERENCE and "triggers" in normalize_sheet_name(sheet_name):
-            summary, entries = parse_knowledge_trigger_sheet(worksheet)
+            summary, trigger_entries = parse_knowledge_trigger_sheet(worksheet)
             imported.sheets.append(summary)
-            imported.trigger_entries.extend(entries)
+            imported.trigger_entries.extend(trigger_entries)
             continue
 
-        summary, rows = parse_knowledge_source_evidence_sheet(worksheet, role)
+        summary, evidence_rows = parse_knowledge_source_evidence_sheet(worksheet, role)
         imported.sheets.append(summary)
-        imported.evidence_rows.extend(rows)
+        imported.evidence_rows.extend(evidence_rows)
 
     return imported
 
@@ -359,19 +374,22 @@ def parse_knowledge_library_csv(
     rows = read_csv_rows(path)
     header_row_index, headers = locate_csv_header_row(rows, required_headers=LIBRARY_HEADERS)
     row_dicts, duplicate_headers = extract_csv_row_dicts(rows, header_row_index, headers)
-    entries = [
-        KnowledgeLibraryEntry(
-            canonical_feature_name=row["canonical_feature_name"],
-            alias_name=row.get("alias_name"),
-            feature_class=row.get("feature_class"),
-            default_temporal_stage=row.get("default_temporal_stage"),
-            description=row.get("description"),
-            typical_effect_direction=row.get("typical_effect_direction"),
-            deployment_priority=row.get("deployment_priority"),
+    entries: list[KnowledgeLibraryEntry] = []
+    for row in row_dicts:
+        canonical_feature_name = row.get("canonical_feature_name")
+        if not canonical_feature_name:
+            continue
+        entries.append(
+            KnowledgeLibraryEntry(
+                canonical_feature_name=canonical_feature_name,
+                alias_name=row.get("alias_name"),
+                feature_class=row.get("feature_class"),
+                default_temporal_stage=row.get("default_temporal_stage"),
+                description=row.get("description"),
+                typical_effect_direction=row.get("typical_effect_direction"),
+                deployment_priority=row.get("deployment_priority"),
+            )
         )
-        for row in row_dicts
-        if row.get("canonical_feature_name")
-    ]
     return (
         KnowledgeCsvTableSummary(
             file_name=path.name,
@@ -477,19 +495,22 @@ def parse_knowledge_library_sheet(
 ) -> tuple[KnowledgeSheetSummary, list[KnowledgeLibraryEntry]]:
     header_row_index, headers = locate_header_row(worksheet, required_headers=LIBRARY_HEADERS)
     row_dicts, duplicate_headers = extract_row_dicts(worksheet, header_row_index, headers)
-    entries = [
-        KnowledgeLibraryEntry(
-            canonical_feature_name=row["canonical_feature_name"],
-            alias_name=row.get("alias_name"),
-            feature_class=row.get("feature_class"),
-            default_temporal_stage=row.get("default_temporal_stage"),
-            description=row.get("description"),
-            typical_effect_direction=row.get("typical_effect_direction"),
-            deployment_priority=row.get("deployment_priority"),
+    entries: list[KnowledgeLibraryEntry] = []
+    for row in row_dicts:
+        canonical_feature_name = row.get("canonical_feature_name")
+        if not canonical_feature_name:
+            continue
+        entries.append(
+            KnowledgeLibraryEntry(
+                canonical_feature_name=canonical_feature_name,
+                alias_name=row.get("alias_name"),
+                feature_class=row.get("feature_class"),
+                default_temporal_stage=row.get("default_temporal_stage"),
+                description=row.get("description"),
+                typical_effect_direction=row.get("typical_effect_direction"),
+                deployment_priority=row.get("deployment_priority"),
+            )
         )
-        for row in row_dicts
-        if row.get("canonical_feature_name")
-    ]
     summary = KnowledgeSheetSummary(
         sheet_name=worksheet.title,
         role=KnowledgeSourceRole.REFERENCE,

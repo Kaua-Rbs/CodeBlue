@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from uuid import UUID
+
 from fastapi import APIRouter, HTTPException
 
 from codeblue.api.dependencies import SessionDependency
@@ -30,11 +32,11 @@ def review_action(
         raise HTTPException(status_code=404, detail="Action not found.")
 
     decision = ReviewDecision(
-        action_id=action.action_id,
+        action_id=UUID(action.action_id),
         reviewer_role=request.reviewer_role,
         decision=request.decision,
         rationale=request.rationale,
-        audit_ref=action.audit_ref,
+        audit_ref=UUID(action.audit_ref),
     )
     review_service = ReviewService(
         governance_repository=governance_repository,

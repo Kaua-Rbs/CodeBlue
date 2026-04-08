@@ -114,41 +114,41 @@ class KnowledgeRepository:
                 )
             )
 
-        for pack in bundle.pathogen_packs:
+        for pathogen_pack in bundle.pathogen_packs:
             self.session.add(
                 PathogenPackRecord(
                     bundle_id=bundle.bundle_id,
-                    pathogen_pack_id=pack.pathogen_pack_id,
-                    pathogen_code=pack.pathogen_code,
-                    display_name=pack.display_name,
-                    version=pack.version,
-                    status=pack.status,
-                    source_document_ids=pack.source_document_ids,
-                    notes=pack.notes,
+                    pathogen_pack_id=pathogen_pack.pathogen_pack_id,
+                    pathogen_code=pathogen_pack.pathogen_code,
+                    display_name=pathogen_pack.display_name,
+                    version=pathogen_pack.version,
+                    status=pathogen_pack.status,
+                    source_document_ids=pathogen_pack.source_document_ids,
+                    notes=pathogen_pack.notes,
                 )
             )
 
-        for pack in bundle.policy_packs:
+        for policy_pack in bundle.policy_packs:
             self.session.add(
                 PolicyPackRecord(
                     bundle_id=bundle.bundle_id,
-                    policy_pack_id=pack.policy_pack_id,
-                    name=pack.name,
-                    version=pack.version,
-                    jurisdiction=pack.jurisdiction,
-                    organization=pack.organization,
-                    source_document_ids=pack.source_document_ids,
+                    policy_pack_id=policy_pack.policy_pack_id,
+                    name=policy_pack.name,
+                    version=policy_pack.version,
+                    jurisdiction=policy_pack.jurisdiction,
+                    organization=policy_pack.organization,
+                    source_document_ids=policy_pack.source_document_ids,
                 )
             )
 
-        for pack in bundle.review_workflow_packs:
+        for workflow_pack in bundle.review_workflow_packs:
             self.session.add(
                 ReviewWorkflowPackRecord(
                     bundle_id=bundle.bundle_id,
-                    workflow_pack_id=pack.workflow_pack_id,
-                    name=pack.name,
-                    version=pack.version,
-                    source_document_ids=pack.source_document_ids,
+                    workflow_pack_id=workflow_pack.workflow_pack_id,
+                    name=workflow_pack.name,
+                    version=workflow_pack.version,
+                    source_document_ids=workflow_pack.source_document_ids,
                 )
             )
 

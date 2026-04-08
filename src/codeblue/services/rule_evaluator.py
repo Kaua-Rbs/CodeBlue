@@ -100,29 +100,29 @@ class RuleEvaluator:
         if not fact_exists:
             return False
         if operator == RuleOperator.EQ:
-            return fact_value == expected_value
+            return bool(fact_value == expected_value)
         if operator == RuleOperator.NEQ:
-            return fact_value != expected_value
+            return bool(fact_value != expected_value)
         if operator == RuleOperator.GT:
-            return fact_value > expected_value
+            return bool(fact_value > expected_value)
         if operator == RuleOperator.GTE:
-            return fact_value >= expected_value
+            return bool(fact_value >= expected_value)
         if operator == RuleOperator.LT:
-            return fact_value < expected_value
+            return bool(fact_value < expected_value)
         if operator == RuleOperator.LTE:
-            return fact_value <= expected_value
+            return bool(fact_value <= expected_value)
         if operator == RuleOperator.IN:
             if not isinstance(expected_value, list):
                 raise ValueError("The 'in' operator requires a list value.")
-            return fact_value in expected_value
+            return bool(fact_value in expected_value)
         if operator == RuleOperator.CONTAINS:
             if isinstance(fact_value, (list, tuple, set, str)):
-                return expected_value in fact_value
+                return bool(expected_value in fact_value)
             return False
         if operator == RuleOperator.COUNT_GTE:
             if isinstance(fact_value, (list, tuple, set, dict, str)):
-                return len(fact_value) >= expected_value
+                return bool(len(fact_value) >= expected_value)
             if isinstance(fact_value, (int, float)):
-                return fact_value >= expected_value
+                return bool(fact_value >= expected_value)
             return False
         raise ValueError(f"Unsupported operator '{operator}'.")

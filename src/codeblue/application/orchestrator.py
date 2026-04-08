@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Protocol
 
 from sqlalchemy.orm import Session
 
@@ -12,6 +13,7 @@ from codeblue.domain.canonical_events import EventEnvelope
 from codeblue.domain.governance_models import ProposedAction
 from codeblue.domain.knowledge_runtime_models import PolicyExecutionContext
 from codeblue.domain.risk_models import PriorityAlert, RiskAssessment
+from codeblue.domain.state_models import StateSnapshotRef
 from codeblue.packs.pathogen.base import PathogenPack
 from codeblue.packs.policy.base import PolicyPack
 from codeblue.persistence.repositories.audit_repository import AuditRepository
@@ -33,13 +35,21 @@ class OrchestrationResult:
     matched_trigger_count: int = 0
 
 
+class PolicyContextBuilder(Protocol):
+    def build(
+        self,
+        events: list[EventEnvelope],
+        snapshot: StateSnapshotRef,
+    ) -> PolicyExecutionContext: ...
+
+
 class OutbreakOrchestrator:
     def __init__(
         self,
         session: Session,
         pathogen_pack: PathogenPack,
         policy_pack: PolicyPack,
-        policy_context_builder: object | None = None,
+        policy_context_builder: PolicyContextBuilder | None = None,
     ) -> None:
         self.session = session
         self.pathogen_pack = pathogen_pack
@@ -128,7 +138,7 @@ class OutbreakOrchestrator:
     def _build_policy_context(
         self,
         events: list[EventEnvelope],
-        snapshot: object,
+        snapshot: StateSnapshotRef,
     ) -> PolicyExecutionContext:
         if self.policy_context_builder is not None:
             return self.policy_context_builder.build(events, snapshot)
